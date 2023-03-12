@@ -1,10 +1,16 @@
-import { useRecoilState } from "recoil";
-import { modalAtom } from "../atoms/atom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { alertBoxAtom, modalAtom } from "../atoms/atom";
 import { useState } from "react";
 import { web3, contract } from "../exports/web3";
 import axios from "axios";
+import { TransactionReceipt } from "web3-core";
 
-const Modal = () => {
+type Props = {
+  email: string;
+};
+
+const Modal = ({ email }: Props) => {
+  const setAlertBox = useSetRecoilState(alertBoxAtom);
   const [uid, setUid] = useState<string>("");
   const [modal, setModal] = useRecoilState(modalAtom);
 
@@ -13,7 +19,6 @@ const Modal = () => {
   };
 
   const callContract = async () => {
-    debugger;
     if (web3 && contract && email) {
       const res = await axios
         .get("/api/getPrivateKey", { params: { email } })
@@ -32,11 +37,16 @@ const Modal = () => {
         .send({
           from: accountAddress,
         })
-        .then(async () => {
+        .then(async (res: TransactionReceipt) => {
+          setAlertBox({
+            show: true,
+            message: `Device with id ${uid} added successfully`,
+          });
           const devices = await contract?.methods
             .getDeviceIDsByUser(accountAddress)
             .call();
           console.log(devices);
+          setModal(false);
         })
         .catch((err: Error) => {
           const errorMessage = err?.stack?.match(/'([^']+)'/)?.[1];
