@@ -36,7 +36,6 @@ export default async function handler(
   const { publicKey } = req.query;
 
   let db = await getDb();
-  log(db);
   const entries = db
     .iterator({ limit: -1 })
     .collect()

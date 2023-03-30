@@ -5,6 +5,7 @@ import Avatar from "../images/man.png";
 import { signOut, useSession } from "next-auth/react";
 import { modalAtom } from "../atoms/atom";
 import { useRecoilState } from "recoil";
+import Modal from "./Modal";
 
 const NavBar = () => {
   const [modal, setModal] = useRecoilState(modalAtom);
@@ -14,11 +15,16 @@ const NavBar = () => {
   const renderNavbar = !pagesWithoutNavbar.includes(pathname);
 
   return renderNavbar ? (
-    <div className="navbar fixed bg-[#e1e1e1] text-black">
+    <div className="navbar fixed bg-[#d5efff] text-black">
       <div className="flex-1">
-        <button className="btn btn-ghost normal-case text-xl">
-          <NextLink href="/">Water Flow</NextLink>
-        </button>
+        <div className="text-xl px-4 inline-flex items-center text-center h-12 hover:bg-[#65656539]  rounded-xl font-bold text-blue-600">
+          <NextLink href="/">
+            <span className="mr-4 text-violet-700 font-extrabold italic">
+              Blockchain
+            </span>
+            Water Flow
+          </NextLink>
+        </div>
       </div>
       {session ? (
         <div className="flex-none">
@@ -31,8 +37,8 @@ const NavBar = () => {
                 Add new device
               </button>
             </li>
-            <li>
-              <a>Item 3</a>
+            <li className="hover:bg-blue-400 hover:text-white transition-colors ease-linear duration-75 rounded-xl font-bold text-blue-600">
+              <NextLink href="/dashboard">Dashboard</NextLink>
             </li>
           </ul>
           <div className="dropdown dropdown-end ">
@@ -46,10 +52,10 @@ const NavBar = () => {
               className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-slate-200 rounded-box w-52"
             >
               <li>
-                <a className="justify-between">
+                <NextLink href="/profile" className="justify-between">
                   Profile
                   <span className="badge">New</span>
-                </a>
+                </NextLink>
               </li>
               <li>
                 <a
@@ -63,6 +69,7 @@ const NavBar = () => {
                 </a>
               </li>
             </ul>
+            <Modal email={session?.user?.email ?? ""} />
           </div>
         </div>
       ) : (

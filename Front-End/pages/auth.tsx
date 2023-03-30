@@ -84,86 +84,84 @@ const Auth: NextPage = ({ providers }: any) => {
   };
 
   return (
-    <div className="flex justify-center h-screen w-full items-center bg-[url('../images/bg2.svg')] bg-cover">
-      <div className="h-3/5 w-[22%] rounded-md glass bg-gradient-to-br p-12">
-        <div className="flex flex-col justify-center items-center w-full">
-          <h1 className="text-2xl text-white">{authType}</h1>
-          <div className="text-sm mb-6 text-white w-full">
-            <div className="flex gap-x-2 justify-center items-center">
-              {authType === "Login"
-                ? "Not registered yet?"
-                : "Already have an account? "}
-              <button onClick={() => setAuthType(oppAuthType[authType])}>
-                <div className="text-white underline font-bold">
-                  {oppAuthType[authType]}
-                </div>
-              </button>
-            </div>
-            <Divider word="Or" />
-            <Formik
-              initialValues={{}} // { email: "", password: "" }
-              validateOnChange={false}
-              validateOnBlur={false}
-              onSubmit={(_, actions) => {
-                formSubmit(actions);
-              }}
-            >
-              {(props) => (
-                <Form style={{ width: "100%" }}>
-                  <div className="flex flex-col w-full mb-4">
-                    {authType === "Register" && (
-                      <Field name="username">
-                        {() => (
-                          <div className="form-control w-full mb-6">
-                            <input
-                              type="text"
-                              className="input input-bordered w-full"
-                              value={username}
-                              onChange={(e) => setUsername(e.target.value)}
-                              placeholder="Username"
-                            />
-                          </div>
-                        )}
-                      </Field>
-                    )}
-                    <Field name="email">
-                      {() => (
-                        <div className="form-control w-full max-w-md mb-6">
-                          <input
-                            className="input input-bordered w-full max-w-md"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Email Address"
-                          />
-                        </div>
-                      )}
-                    </Field>
-                    <Field name="password">
-                      {() => (
-                        <div className="form-control w-full max-w-md mb-6">
-                          <input
-                            className="input input-bordered w-full max-w-md"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            type="password"
-                            placeholder="Password"
-                          />
-                        </div>
-                      )}
-                    </Field>
-                    <button
-                      className={`btn bg-blue-600 border-white text-white mt-6 ${
-                        props.isSubmitting && "loading"
-                      }`}
-                      type="submit"
-                    >
-                      {authType}
-                    </button>
-                  </div>
-                </Form>
-              )}
-            </Formik>
+    <div className="h-3/5 w-[22%] rounded-md m-auto glass bg-gradient-to-br p-12">
+      <div className="flex flex-col justify-center items-center w-full">
+        <h1 className="text-2xl text-white">{authType}</h1>
+        <div className="text-sm mb-6 text-white w-full">
+          <div className="flex gap-x-2 justify-center items-center">
+            {authType === "Login"
+              ? "Not registered yet?"
+              : "Already have an account? "}
+            <button onClick={() => setAuthType(oppAuthType[authType])}>
+              <div className="text-white underline font-bold">
+                {oppAuthType[authType]}
+              </div>
+            </button>
           </div>
+          <Divider word="Or" />
+          <Formik
+            initialValues={{}} // { email: "", password: "" }
+            validateOnChange={false}
+            validateOnBlur={false}
+            onSubmit={(_, actions) => {
+              formSubmit(actions);
+            }}
+          >
+            {(props) => (
+              <Form style={{ width: "100%" }}>
+                <div className="flex flex-col w-full mb-4">
+                  {authType === "Register" && (
+                    <Field name="username">
+                      {() => (
+                        <div className="form-control w-full mb-6">
+                          <input
+                            type="text"
+                            className="input input-bordered w-full"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Username"
+                          />
+                        </div>
+                      )}
+                    </Field>
+                  )}
+                  <Field name="email">
+                    {() => (
+                      <div className="form-control w-full max-w-md mb-6">
+                        <input
+                          className="input input-bordered w-full max-w-md"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="Email Address"
+                        />
+                      </div>
+                    )}
+                  </Field>
+                  <Field name="password">
+                    {() => (
+                      <div className="form-control w-full max-w-md mb-6">
+                        <input
+                          className="input input-bordered w-full max-w-md"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          type="password"
+                          placeholder="Password"
+                        />
+                      </div>
+                    )}
+                  </Field>
+                  <button
+                    className={`btn bg-blue-600 border-white text-white mt-6 ${
+                      props.isSubmitting && "loading"
+                    }`}
+                    type="submit"
+                  >
+                    {authType}
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </div>
       </div>
     </div>

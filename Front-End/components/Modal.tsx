@@ -56,7 +56,7 @@ const Modal = ({ email }: Props) => {
   };
 
   return (
-    <div className={`modal ${modal ? "modal-open" : ""}`}>
+    <div className={`modal  ${modal ? "modal-open" : ""}`}>
       <div className="modal-box bg-white">
         <h3 className="font-bold text-lg text-center">
           Add the details necessary to add a new device

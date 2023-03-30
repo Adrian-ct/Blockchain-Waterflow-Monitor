@@ -5,16 +5,17 @@ import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { alertBoxAtom } from "../atoms/atom";
 import AlertBox from "../components/AlertBox";
+import Background from "../components/Background";
 import Modal from "../components/Modal";
 //Signed in as {session?.user?.email}
 
-const Background = ({ children }: any) => {
-  return (
-    <div className="flex justify-center h-screen w-full items-center bg-[url('../images/bg.svg')] bg-cover text-black">
-      {children}
-    </div>
-  );
-};
+// export const Background = ({ children }: any) => {
+//   return (
+//     <div className="flex justify-center h-screen w-full items-center bg-[url('../images/bg.svg')] bg-cover text-black">
+//       {children}
+//     </div>
+//   );
+// };
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -74,7 +75,7 @@ const Home: NextPage = () => {
 
   if (session) {
     return (
-      <Background>
+      <>
         <Modal email={session?.user?.email ?? ""} />
         <button
           onClick={onClickHandler}
@@ -93,7 +94,7 @@ const Home: NextPage = () => {
             <AlertBox message={alertBox.message} />{" "}
           </div>
         )}
-      </Background>
+      </>
     );
   } else {
     return <Background>Hello</Background>;
