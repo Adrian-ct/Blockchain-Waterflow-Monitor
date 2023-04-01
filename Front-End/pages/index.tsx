@@ -2,7 +2,7 @@ import axios from "axios";
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { alertBoxAtom } from "../atoms/atom";
 import AlertBox from "../components/AlertBox";
 import Background from "../components/Background";
@@ -55,8 +55,8 @@ const Home: NextPage = () => {
       })
       .catch(function (error) {
         console.log(error);
+        return;
       });
-    console.log(res2);
   };
 
   const onClickHandler2 = async () => {
@@ -75,7 +75,7 @@ const Home: NextPage = () => {
 
   if (session) {
     return (
-      <>
+      <div className="flex justify-center items-center h-72">
         <Modal email={session?.user?.email ?? ""} />
         <button
           onClick={onClickHandler}
@@ -94,10 +94,16 @@ const Home: NextPage = () => {
             <AlertBox message={alertBox.message} />{" "}
           </div>
         )}
-      </>
+      </div>
     );
   } else {
-    return <Background>Hello</Background>;
+    return (
+      <Background>
+        <h1 className="text-white text-3xl text-center">
+          Please Log In to see the information
+        </h1>
+      </Background>
+    );
   }
 };
 

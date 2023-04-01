@@ -23,12 +23,14 @@ const Modal = ({ email }: Props) => {
       const res = await axios
         .get("/api/getPrivateKey", { params: { email } })
         .then(function (response) {
+          console.log(response.data);
           return response.data;
         })
         .catch(function (error) {
           console.log(error);
         });
 
+      if (!res) return;
       const account = web3?.eth.accounts.privateKeyToAccount(res);
       const accountAddress = account?.address;
 
@@ -62,7 +64,7 @@ const Modal = ({ email }: Props) => {
           Add the details necessary to add a new device
         </h3>
         <div className="form-control text-white">
-          <label className="label">
+          {/* <label className="label">
             <span className="label-text">Your Email</span>
           </label>
           <label className="input-group">
@@ -77,7 +79,7 @@ const Modal = ({ email }: Props) => {
               // }}
               // value={email}
             />
-          </label>
+          </label> */}
           <label className="label">
             <span className="label-text">
               Device's Unique ID (Can be found on the back)

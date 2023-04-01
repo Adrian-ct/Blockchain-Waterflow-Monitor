@@ -13,8 +13,6 @@ contract WaterFlow {
         userDevices[msg.sender].push(deviceID);
     }
     function addDevice(string memory deviceId) public {
-        // address user = msg.sender;
-        // userDevices[user].push(deviceId);
         address user = msg.sender;
         bool deviceExists = false;
         for (uint i = 0; i < userDevices[user].length; i++) {

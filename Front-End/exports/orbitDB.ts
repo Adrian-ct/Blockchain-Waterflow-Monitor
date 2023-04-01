@@ -4,14 +4,26 @@ import { log } from "console";
 import { GlobalRef } from "./GlobalRef";
 
 async function createOrbitDB() {
+  let dbLog;
   try {
     const ipfs = create({ url: "/ip4/127.0.0.1/tcp/5001" });
-    const orbitdb = await OrbitDB.createInstance(ipfs);
-    const dbLog = await orbitdb.eventlog("hello");
+    const orbitdb = await OrbitDB.createInstance(ipfs, {
+      directory: "./orbitdb/examples/eventlog",
+    });
+    dbLog = await orbitdb.eventlog("waterflow", { overwrite: true });
+    await dbLog.load();
+    log(dbLog.address.toString() + " was created");
+    dbLog.events.on("write", (address: any, entry: any, heads: any) => {
+      console.log(`Databse updated`);
+      console.log(`Address: ${address}`);
+      console.log(`Entry: ${entry}`);
+      console.log(`Heads: ${heads}`);
+    });
     return dbLog;
   } catch (err: any) {
+    log("Error creating database");
     log(err);
-    throw new Error(err);
+    throw err;
   }
 }
 
@@ -23,7 +35,7 @@ export default async function getDb(): Promise<OrbitDB> {
       databaseConn.value = await createOrbitDB();
       log("Database loaded");
     } catch (err) {
-      log(err);
+      throw err;
     }
   }
   return databaseConn.value;
