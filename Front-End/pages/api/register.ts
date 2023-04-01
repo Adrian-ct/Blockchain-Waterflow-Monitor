@@ -4,6 +4,8 @@ import dbConnect from "../../lib/dbConnect";
 import User from "../../model/User";
 import bcrypt from "bcrypt";
 import Account from "../../model/Account";
+import { web3, contract } from "../../exports/web3";
+import { log } from "console";
 
 export interface ResponseData {
   error?: string;
@@ -61,16 +63,22 @@ export default async function handler(
     return res.status(400).json(errorMessage as ResponseData);
   }
 
+  //create a new web account for the user
+  // const newAccount = web3.eth.accounts.create();
+  const encyptedPrivateKey = web3.eth.accounts.encrypt(
+    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+    process.env.WEB3_SECRET as string
+  );
   // hash password
   const hashedPassword = await bcrypt.hash(password, 12);
 
   // create new User on MongoDB
   const newUser = new User({
-    name: username,
+    username,
     email,
     hashedPassword,
-    privateKey:
-      "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a",
+    privateKey: JSON.stringify(encyptedPrivateKey),
+    publicKey: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
   });
 
   newUser

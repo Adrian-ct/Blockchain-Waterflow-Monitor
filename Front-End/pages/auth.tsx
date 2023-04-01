@@ -35,6 +35,7 @@ const Auth: NextPage = ({ providers }: any) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   //Const providerButtons not needed
 
@@ -78,7 +79,7 @@ const Auth: NextPage = ({ providers }: any) => {
         redirectToHome();
       })
       .catch((error) => {
-        console.log(error);
+        setError(error.err);
       });
     console.log(res);
   };
@@ -158,6 +159,9 @@ const Auth: NextPage = ({ providers }: any) => {
                   >
                     {authType}
                   </button>
+                  {error && (
+                    <h1 className="text-xl text-error mt-6">{error}</h1>
+                  )}
                 </div>
               </Form>
             )}

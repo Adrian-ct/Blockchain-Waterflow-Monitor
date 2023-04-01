@@ -4,6 +4,7 @@ import { useState } from "react";
 import { web3, contract } from "../exports/web3";
 import axios from "axios";
 import { TransactionReceipt } from "web3-core";
+import { log } from "console";
 
 type Props = {
   email: string;
@@ -15,7 +16,44 @@ const Modal = ({ email }: Props) => {
   const [modal, setModal] = useRecoilState(modalAtom);
 
   const submit = async () => {
-    await callContract();
+    //await callContract();
+    await addDevice();
+  };
+
+  const addDevice = async () => {
+    if (web3 && contract && email) {
+      const res = await axios
+        .post(
+          "/api/addDevice",
+          {
+            email,
+            uid,
+          },
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then(function (response) {
+          setAlertBox({
+            show: true,
+            message: response.data.msg,
+            error: false,
+          });
+          setModal(false);
+        })
+        .catch(function (error) {
+          console.log(error.response);
+          setAlertBox({
+            show: true,
+            message: error.response?.data?.error || "An error occurred",
+            error: true,
+          });
+          setModal(false);
+        });
+    }
   };
 
   const callContract = async () => {
@@ -43,6 +81,7 @@ const Modal = ({ email }: Props) => {
           setAlertBox({
             show: true,
             message: `Device with id ${uid} added successfully`,
+            error: false,
           });
           const devices = await contract?.methods
             .getDeviceIDsByUser(accountAddress)

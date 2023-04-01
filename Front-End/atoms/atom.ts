@@ -11,5 +11,6 @@ export const alertBoxAtom = atom({
   default: {
     show: false,
     message: "",
+    error: false,
   }, // default value (aka initial value)
 });

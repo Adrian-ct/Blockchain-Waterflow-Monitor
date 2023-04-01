@@ -23,7 +23,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     let timer = setTimeout(
-      () => setAlertBox({ show: false, message: "" }),
+      () => setAlertBox({ show: false, message: "", error: false }),
       4000
     );
     return () => clearTimeout(timer);
@@ -91,7 +91,7 @@ const Home: NextPage = () => {
         </button>
         {alertBox.show && (
           <div className="fixed w-2/5 left-1/2 -translate-x-1/2 bottom-10">
-            <AlertBox message={alertBox.message} />{" "}
+            <AlertBox message={alertBox.message} error={alertBox.error} />{" "}
           </div>
         )}
       </div>

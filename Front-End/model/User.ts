@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  name: {
+  username: {
     type: String,
     required: true,
     unique: true,
@@ -19,6 +19,11 @@ const UserSchema = new Schema({
     minLength: 5,
   },
   privateKey: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  publicKey: {
     type: String,
     required: true,
     unique: true,

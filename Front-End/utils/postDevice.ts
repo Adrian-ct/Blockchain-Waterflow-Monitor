@@ -27,6 +27,7 @@ export const postDevice = async ({ publicKey, deviceID }: PostDeviceProps) => {
       }
     )
     .then(function (response) {
+      //here we have the CID of the file
       return response.data;
     })
     .catch(function (error) {

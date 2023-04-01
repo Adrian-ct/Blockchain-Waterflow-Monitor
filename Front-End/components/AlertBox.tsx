@@ -1,9 +1,14 @@
 type Props = {
   message: string;
+  error?: boolean;
 };
-const AlertBox = ({ message }: Props) => {
+const AlertBox = ({ message, error }: Props) => {
   return (
-    <div className="alert alert-loading alert-success shadow-lg text-white">
+    <div
+      className={`alert alert-loading ${
+        error ? "alert-error" : "alert-success"
+      } shadow-lg text-white`}
+    >
       <div>
         <svg
           xmlns="http://www.w3.org/2000/svg"

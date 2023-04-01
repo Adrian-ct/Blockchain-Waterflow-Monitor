@@ -8,6 +8,7 @@ export async function callContract(
   setAlertBox: Function,
   setModal: Function
 ): Promise<void> {
+  
   const privateKey = await getPrivateKey(email);
 
   if (privateKey) {
