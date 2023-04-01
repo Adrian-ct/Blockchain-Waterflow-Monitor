@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
 import { useEffect } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { alertBoxAtom } from "../atoms/atom";
+import { alertBoxAtom, emailAtom } from "../atoms/atom";
 import AlertBox from "../components/AlertBox";
 import Background from "../components/Background";
 import Modal from "../components/Modal";
@@ -20,7 +20,6 @@ import Modal from "../components/Modal";
 const Home: NextPage = () => {
   const { data: session } = useSession();
   const [alertBox, setAlertBox] = useRecoilState(alertBoxAtom);
-
   useEffect(() => {
     let timer = setTimeout(
       () => setAlertBox({ show: false, message: "", error: false }),

@@ -15,7 +15,7 @@ const NavBar = () => {
   const renderNavbar = !pagesWithoutNavbar.includes(pathname);
 
   return renderNavbar ? (
-    <div className="navbar fixed bg-[#d5efff] text-black">
+    <div className="navbar fixed top-0 left-0 bg-[#d5efff] text-black">
       <div className="flex-1">
         <div className="text-xl px-4 inline-flex items-center text-center h-12 hover:bg-[#65656539]  rounded-xl font-bold text-blue-600">
           <NextLink href="/">
