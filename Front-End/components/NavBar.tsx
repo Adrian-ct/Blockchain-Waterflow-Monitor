@@ -15,9 +15,9 @@ const NavBar = () => {
   const renderNavbar = !pagesWithoutNavbar.includes(pathname);
 
   return renderNavbar ? (
-    <div className="navbar fixed top-0 left-0 bg-[#d5efff] text-black">
+    <div className="navbar fixed z-[100] top-0 left-0 bg-[#44b7ffb0] text-black">
       <div className="flex-1">
-        <div className="text-xl px-4 inline-flex items-center text-center h-12 hover:bg-[#65656539]  rounded-xl font-bold text-blue-600">
+        <div className="text-xl px-4 inline-flex items-center text-center h-12 hover:bg-[#65656539] hover:border-l-0 rounded-xl font-bold text-blue-600">
           <NextLink href="/">
             <span className="mr-4 text-violet-700 font-extrabold italic">
               Blockchain

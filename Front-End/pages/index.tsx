@@ -2,8 +2,8 @@ import axios from "axios";
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
 import { useEffect } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { alertBoxAtom, emailAtom } from "../atoms/atom";
+import { useRecoilState } from "recoil";
+import { alertBoxAtom } from "../atoms/atom";
 import AlertBox from "../components/AlertBox";
 import Background from "../components/Background";
 import Modal from "../components/Modal";
@@ -72,6 +72,19 @@ const Home: NextPage = () => {
     console.log(res);
   };
 
+  const onClickHandler3 = async () => {
+    //get request to get all devices
+    const res = await axios
+      .get("/api/addData", { params: { deviceID: "12345", data: "1234" } })
+      .then(function (response) {
+        //return response.data;
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error.response?.data?.error);
+      });
+  };
+
   if (session) {
     return (
       <div className="flex justify-center items-center h-72">
@@ -87,6 +100,12 @@ const Home: NextPage = () => {
           className="btn btn-warning ml-10 text-xl capitalize"
         >
           Get Devices
+        </button>
+        <button
+          onClick={onClickHandler3}
+          className="btn btn-info ml-10 text-xl capitalize"
+        >
+          Add Data
         </button>
         {alertBox.show && (
           <div className="fixed w-2/5 left-1/2 -translate-x-1/2 bottom-10">
