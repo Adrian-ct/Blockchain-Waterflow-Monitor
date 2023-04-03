@@ -58,6 +58,33 @@ const Home: NextPage = () => {
       });
   };
 
+  const onClickHandler4 = async () => {
+    let deviceID = "12345";
+    await axios
+      .post(
+        "/api/addData",
+        {
+          deviceID,
+          data: {
+            waterflow: 20,
+            date: new Date().toISOString(),
+          },
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then(function (response) {
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error.response?.data?.error);
+      });
+  };
+
   const onClickHandler2 = async () => {
     //get request to get all devices
     let publicKey = "123456789";
@@ -102,7 +129,7 @@ const Home: NextPage = () => {
           Get Devices
         </button>
         <button
-          onClick={onClickHandler3}
+          onClick={onClickHandler4}
           className="btn btn-info ml-10 text-xl capitalize"
         >
           Add Data

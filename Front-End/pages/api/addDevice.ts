@@ -15,7 +15,8 @@ export default async function handler(
       .status(200)
       .json({ error: "This API call only accepts POST methods" });
   }
-  const { email, uid } = req.body;
+  const email = req.body.email.trim();
+  const uid = req.body.uid.trim();
 
   const user = await User.findOne({ email: email });
 
