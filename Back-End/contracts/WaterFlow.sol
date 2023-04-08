@@ -13,23 +13,12 @@ contract WaterFlow {
     
     function addDevice(string memory deviceId) public {
         address user = msg.sender;
-        bool deviceExists = false;
-        for (uint i = 0; i < userDevices[user].length; i++) {
-            if (keccak256(bytes(userDevices[user][i])) == keccak256(bytes(deviceId))) {
-                deviceExists = true;
-                break;
-            }
-        }
-        if (!deviceExists) {
+        if (deviceToOwner[deviceId] == address(0)) {
             userDevices[user].push(deviceId);
-            deviceToOwner[deviceId] = user; 
+            deviceToOwner[deviceId] = user;
         } else {
             revert("Device already exists for this user.");
         }
-    }
-    
-    function getWaterFlowData(string memory deviceID, uint index) public view returns (string memory) {
-        return deviceCIDs[deviceID][index];
     }
     
     function getCIDsByDeviceID(string memory deviceID) public view returns (string[] memory) {
@@ -41,13 +30,7 @@ contract WaterFlow {
     }
 
     function checkDeviceExists(string memory deviceID) public view returns (bool) {
-        string[] memory deviceIDs = userDevices[msg.sender];
-        for (uint i = 0; i < deviceIDs.length; i++) {
-            if (keccak256(abi.encodePacked(deviceIDs[i])) == keccak256(abi.encodePacked(deviceID))) {
-                return true;
-            }
-        }
-        return false;
+        return deviceToOwner[deviceID] == msg.sender;
     }
     
     function getAddressByDeviceID(string memory deviceID) public view returns (address, bool) {

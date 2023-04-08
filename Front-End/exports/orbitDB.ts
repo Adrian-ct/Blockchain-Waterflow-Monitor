@@ -8,16 +8,13 @@ async function createOrbitDB() {
   try {
     const ipfs = create({ url: "/ip4/127.0.0.1/tcp/5001" });
     const orbitdb = await OrbitDB.createInstance(ipfs, {
-      directory: "./orbitdb/examples/eventlog",
+      directory: "./orbitdb/examples/keyvalue",
     });
-    dbLog = await orbitdb.eventlog("waterflow", { overwrite: true });
+    dbLog = await orbitdb.keyvalue("waterflow");
     await dbLog.load();
     log(dbLog.address.toString() + " was created");
     dbLog.events.on("write", (address: any, entry: any, heads: any) => {
       console.log(`Databse updated`);
-      console.log(`Address: ${address}`);
-      console.log(`Entry: ${entry}`);
-      console.log(`Heads: ${heads}`);
     });
     return dbLog;
   } catch (err: any) {

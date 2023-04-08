@@ -59,14 +59,14 @@ const Home: NextPage = () => {
   };
 
   const onClickHandler4 = async () => {
-    let deviceID = "12345";
+    let deviceID = "1";
     await axios
       .post(
         "/api/addData",
         {
           deviceID,
           data: {
-            waterflow: 20,
+            waterflow: 25,
             date: new Date().toISOString(),
           },
         },
@@ -85,27 +85,25 @@ const Home: NextPage = () => {
       });
   };
 
-  const onClickHandler2 = async () => {
-    //get request to get all devices
-    let publicKey = "123456789";
-    const res = await axios
-      .get("/api/getDevices", { params: { publicKey } })
+  const onClickGetDevices = async () => {
+    let email = session?.user?.email ?? "";
+    axios
+      .get("/api/getDevices", { params: { email } })
       .then(function (response) {
-        return response.data;
+        console.log(response.data.result);
       })
       .catch(function (error) {
-        console.log(error);
+        console.log(error.response?.data?.error);
       });
-    console.log(res);
   };
 
-  const onClickHandler3 = async () => {
-    //get request to get all devices
-    const res = await axios
-      .get("/api/addData", { params: { deviceID: "12345", data: "1234" } })
+  const onClickGetCID = async () => {
+    let email = session?.user?.email ?? "";
+    let deviceID = "1";
+    axios
+      .get("/api/getCIDs", { params: { email, deviceID } })
       .then(function (response) {
-        //return response.data;
-        console.log(response.data);
+        console.log(response.data.result);
       })
       .catch(function (error) {
         console.log(error.response?.data?.error);
@@ -117,13 +115,13 @@ const Home: NextPage = () => {
       <div className="flex justify-center items-center h-72">
         <Modal email={session?.user?.email ?? ""} />
         <button
-          onClick={onClickHandler}
-          className="btn btn-accent text-xl capitalize"
+          onClick={onClickGetCID}
+          className="btn btn-error ml-10 text-xl capitalize"
         >
-          Post Devices
+          Get CIDs
         </button>
         <button
-          onClick={onClickHandler2}
+          onClick={onClickGetDevices}
           className="btn btn-warning ml-10 text-xl capitalize"
         >
           Get Devices

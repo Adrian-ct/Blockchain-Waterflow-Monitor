@@ -16,8 +16,8 @@ const Modal = ({ email }: Props) => {
   const [modal, setModal] = useRecoilState(modalAtom);
 
   const submit = async () => {
-    //await callContract();
     await addDevice();
+    setUid("");
   };
 
   const addDevice = async () => {

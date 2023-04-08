@@ -19,10 +19,10 @@ export default async function handler(
       .status(200)
       .json({ error: "This API call only accepts POST methods" });
   }
-  const { email } = req.query;
+  const { email, deviceID } = req.query;
 
   let publicKey: string;
-  let devices: string[] = [];
+  let CIDs: string[] = [];
 
   if (!email) return res.status(200).json({ error: "Email is empty" });
 
@@ -32,13 +32,13 @@ export default async function handler(
 
   try {
     publicKey = user.publicKey;
-    devices = await contract.methods
-      .getDeviceIDsByUser(publicKey)
+    CIDs = await contract.methods
+      .getCIDsByDeviceID(deviceID)
       .call({ from: publicKey });
   } catch (err: any) {
     log(err);
-    return res.status(400).json({ error: "Error while fetching devices" });
+    return res.status(400).json({ error: "Error while fetching CIDs" });
   }
 
-  res.status(200).json({ result: devices });
+  res.status(200).json({ result: CIDs });
 }

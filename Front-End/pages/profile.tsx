@@ -3,40 +3,25 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
-
-type DeviceType = {
-  publicKey: string;
-  deviceID: string;
-  data: {
-    waterflow: number;
-    date: Date;
-  };
-};
-
-const Item = ({ device }: { device: string }) => {
-  return (
-    <div
-      tabIndex={0}
-      className="collapse text-white bg-purple-800 collapse-arrow border border-base-300 rounded-box"
-    >
-      <div className="collapse-title text-xl font-medium">{device}</div>
-      <div className="collapse-content">
-        A diagram for each device will be displayed here.
-      </div>
-    </div>
-  );
-};
+import { DeviceStats } from "../types/orbitDB";
+import AlertBox from "../components/AlertBox";
+import { useRecoilState } from "recoil";
+import { alertBoxAtom } from "../atoms/atom";
+import Item from "../components/Item";
 
 const Profile: NextPage = () => {
-  const [devices, setDevices] = useState<DeviceType[]>([]);
+  const [devices, setDevices] = useState<DeviceStats>({});
   const { data: session } = useSession();
+  const [alertBox, setAlertBox] = useRecoilState(alertBoxAtom);
+
   const onClickHandler2 = async () => {
     let email = session?.user?.email as string;
     if (!email) return;
     axios
-      .get("/api/getAllDevices", { params: { email } })
+      .get("/api/getDeviceStats", { params: { email } })
       .then(function (response) {
-        setDevices(response.data.msg);
+        console.log(response.data.result);
+        setDevices(response.data.result);
       })
       .catch(function (error) {
         console.log(error.response?.data?.error);
@@ -50,6 +35,11 @@ const Profile: NextPage = () => {
   return (
     <div className="flex flex-col gap-6 justify-center items-center w-full">
       <Modal email={session?.user?.email as string} />
+      {alertBox.show && (
+        <div className="fixed w-2/5 left-1/2 -translate-x-1/2 bottom-10">
+          <AlertBox message={alertBox.message} error={alertBox.error} />{" "}
+        </div>
+      )}
       <div className="tabs tabs-boxed">
         <div id="_tab1" className="tab tab-active">
           Tab 1
@@ -61,8 +51,14 @@ const Profile: NextPage = () => {
           Tab 3
         </div>
       </div>
-      {devices.map((device: DeviceType, idx: number) => {
-        return <Item device={device} key={idx as number} />;
+      {Object.keys(devices).map((deviceId: string, idx) => {
+        return (
+          <Item
+            deviceID={deviceId}
+            deviceData={devices[deviceId]}
+            key={idx as number}
+          />
+        );
       })}
     </div>
   );

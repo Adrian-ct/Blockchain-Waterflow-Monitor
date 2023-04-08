@@ -2,7 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { log } from "console";
 import { ResponseData } from "./register";
-import getDb from "../../exports/orbitDB";
 import User from "../../model/User";
 import { web3, contract } from "../../exports/web3";
 
@@ -36,7 +35,7 @@ export default async function handler(
       res.status(400).json({ error: "Device already exists" });
       return;
     }
-    const txObject = contract.methods.addDevice(uid);
+    const txObject = await contract.methods.addDevice(uid);
 
     const gasPrice = await web3.eth.getGasPrice();
     const gasLimit = await txObject.estimateGas({ from: account.address });
