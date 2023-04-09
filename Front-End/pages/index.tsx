@@ -28,45 +28,15 @@ const Home: NextPage = () => {
     return () => clearTimeout(timer);
   }, [alertBox.show]);
 
-  const onClickHandler = async () => {
-    let publicKey = "123456789";
-    let deviceID = "123456789";
-    const res2 = await axios
-      .post(
-        "/api/postDevices",
-        {
-          publicKey,
-          deviceID,
-          data: {
-            waterflow: 20,
-            date: new Date().toISOString(),
-          },
-        },
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then(function (response) {
-        return response.data;
-      })
-      .catch(function (error) {
-        console.log(error);
-        return;
-      });
-  };
-
   const onClickHandler4 = async () => {
-    let deviceID = "1";
+    let deviceID = "2";
     await axios
       .post(
         "/api/addData",
         {
           deviceID,
           data: {
-            waterflow: 25,
+            waterflow: 15,
             date: new Date().toISOString(),
           },
         },
@@ -99,7 +69,7 @@ const Home: NextPage = () => {
 
   const onClickGetCID = async () => {
     let email = session?.user?.email ?? "";
-    let deviceID = "1";
+    let deviceID = "2";
     axios
       .get("/api/getCIDs", { params: { email, deviceID } })
       .then(function (response) {

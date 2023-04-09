@@ -4,6 +4,7 @@ import { ResponseData } from "./register";
 import User from "../../model/User";
 import { contract, web3 } from "../../exports/web3";
 import getDb from "../../exports/orbitDB";
+import { DeviceData } from "../../types/orbitDB";
 
 const BUSINESS_EMAIL = "business@yahoo.com";
 
@@ -42,15 +43,19 @@ export default async function handler(
     //save the data on IPFS, get the hash
     let db = await getDb();
     let hash;
-    const existingDataPoints = await db.get(deviceID);
-    if (existingDataPoints) {
+    let newData: DeviceData = { data: [data] };
+    const existingDataPoints = (await db.get(deviceID)) as DeviceData;
+    if (existingDataPoints.data) {
       log("existingDataPoints: " + JSON.stringify(existingDataPoints, null, 2));
-       // Update the existing entry with the new data point
-      const newDataPoints = [...existingDataPoints, data];
-      hash = await db.put(deviceID, newDataPoints);
+      // Update the existing entry with the new data point
+      const newDataPoints = [...existingDataPoints.data, data];
+      hash = await db.put(deviceID, {
+        ...existingDataPoints,
+        data: newDataPoints,
+      });
     } else {
       // Save a new entry with the device ID and the data point
-      hash = await db.put(deviceID, [data]);
+      hash = await db.put(deviceID, { ...existingDataPoints, newData });
     }
     //find the user by public key
     const user = await User.findOne({ publicKey });

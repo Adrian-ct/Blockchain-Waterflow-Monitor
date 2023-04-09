@@ -4,6 +4,8 @@ import { log } from "console";
 import { ResponseData } from "./register";
 import User from "../../model/User";
 import { web3, contract } from "../../exports/web3";
+import getDb from "../../exports/orbitDB";
+import { DeviceData } from "../../types/orbitDB";
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,6 +18,7 @@ export default async function handler(
   }
   const email = req.body.email.trim();
   const uid = req.body.uid.trim();
+  const alias = req.body.alias?.trim();
 
   const user = await User.findOne({ email: email });
 
@@ -60,6 +63,15 @@ export default async function handler(
       .status(400)
       .json({ error: "Error creating transaction:" + err.message });
   }
+
+  let db = await getDb();
+  const existingDataPoints = await db.get(uid);
+  let newData: DeviceData = {
+    data: [],
+    alias: alias,
+  };
+  if (existingDataPoints) newData.data = existingDataPoints;
+  await db.put(uid, newData);
 
   res.status(200).json({ msg: "Device added succesfully" });
 }

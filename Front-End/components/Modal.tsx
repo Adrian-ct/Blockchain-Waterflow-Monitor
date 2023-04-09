@@ -13,11 +13,13 @@ type Props = {
 const Modal = ({ email }: Props) => {
   const setAlertBox = useSetRecoilState(alertBoxAtom);
   const [uid, setUid] = useState<string>("");
+  const [alias, setAlias] = useState<string>("");
   const [modal, setModal] = useRecoilState(modalAtom);
 
   const submit = async () => {
     await addDevice();
     setUid("");
+    setAlias("");
   };
 
   const addDevice = async () => {
@@ -28,6 +30,7 @@ const Modal = ({ email }: Props) => {
           {
             email,
             uid,
+            alias,
           },
           {
             headers: {
@@ -56,46 +59,6 @@ const Modal = ({ email }: Props) => {
     }
   };
 
-  const callContract = async () => {
-    if (web3 && contract && email) {
-      const res = await axios
-        .get("/api/getPrivateKey", { params: { email } })
-        .then(function (response) {
-          console.log(response.data);
-          return response.data;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-
-      if (!res) return;
-      const account = web3?.eth.accounts.privateKeyToAccount(res);
-      const accountAddress = account?.address;
-
-      contract?.methods
-        .addDevice(uid)
-        .send({
-          from: accountAddress,
-        })
-        .then(async (res: TransactionReceipt) => {
-          setAlertBox({
-            show: true,
-            message: `Device with id ${uid} added successfully`,
-            error: false,
-          });
-          const devices = await contract?.methods
-            .getDeviceIDsByUser(accountAddress)
-            .call();
-          console.log(devices);
-          setModal(false);
-        })
-        .catch((err: Error) => {
-          const errorMessage = err?.stack?.match(/'([^']+)'/)?.[1];
-          console.error(errorMessage);
-        });
-    }
-  };
-
   return (
     <div className={`modal  ${modal ? "modal-open" : ""}`}>
       <div className="modal-box bg-white">
@@ -103,22 +66,24 @@ const Modal = ({ email }: Props) => {
           Add the details necessary to add a new device
         </h3>
         <div className="form-control text-white">
-          {/* <label className="label">
-            <span className="label-text">Your Email</span>
+          <label className="label">
+            <span className="label-text">An alias for easier reading</span>
           </label>
           <label className="input-group">
-            <span>Email</span>
+            <span>Alias</span>
             <input
               type="text"
-              placeholder="info@site.com"
-              className="input input-bordered"
+              placeholder="Bathroom"
+              className="input input-bordered w-full"
+              minLength={3}
+              maxLength={50}
               required
-              // onChange={(e) => {
-              //   setEmail(e.target.value);
-              // }}
-              // value={email}
+              onChange={(e) => {
+                setAlias(e.target.value);
+              }}
+              value={alias}
             />
-          </label> */}
+          </label>
           <label className="label">
             <span className="label-text">
               Device's Unique ID (Can be found on the back)
@@ -132,7 +97,7 @@ const Modal = ({ email }: Props) => {
               maxLength={16}
               required
               placeholder="********"
-              className="input input-bordered"
+              className="input input-bordered w-full"
               onChange={(e) => {
                 setUid(e.target.value);
               }}

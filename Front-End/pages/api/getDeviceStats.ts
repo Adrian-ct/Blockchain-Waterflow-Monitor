@@ -4,10 +4,10 @@ import { log } from "console";
 import User from "../../model/User";
 import { contract } from "../../exports/web3";
 import getDb from "../../exports/orbitDB";
-import { DatabaseEntry, DeviceData, EntryData } from "../../types/orbitDB";
+import { DeviceStats } from "../../types/orbitDB";
 
 type ResponseData = {
-  result?: { [deviceID: string]: EntryData[] };
+  result?: DeviceStats;
   error?: string;
 };
 
@@ -41,12 +41,11 @@ export default async function handler(
     const data = await contract.methods
       .getCIDsByDeviceID(uid)
       .call({ from: publicKey });
-    log(data, `data for ${uid}`);
   });
 
   //The devices were fetched successfully, now we need to get the stats for each device
   let db = await getDb();
-  let deviceStats: { [deviceID: string]: EntryData[] } = {};
+  let deviceStats: DeviceStats = {};
 
   await Promise.all(
     devices.map(async (uid: string) => {
@@ -54,10 +53,13 @@ export default async function handler(
       if (dataPoints) {
         deviceStats[uid] = dataPoints;
       } else {
-        deviceStats[uid] = [];
+        deviceStats[uid] = { data: [] };
       }
     })
   );
+
+  //For now
+  delete deviceStats[1];
 
   res.status(200).json({ result: deviceStats });
 }
