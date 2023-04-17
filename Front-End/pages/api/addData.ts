@@ -4,7 +4,7 @@ import { ResponseData } from "./register";
 import User from "../../model/User";
 import { contract, web3 } from "../../exports/web3";
 import getDb from "../../exports/orbitDB";
-import { DeviceData } from "../../types/orbitDB";
+import { DeviceWaterflow } from "../../types/orbitDB";
 
 const BUSINESS_EMAIL = "business@yahoo.com";
 
@@ -17,8 +17,12 @@ export default async function handler(
       .status(400)
       .json({ error: "This API call only accepts POST methods" });
   }
-  const data = req.body.data;
-  const deviceID = req.body.deviceID.trim();
+  const data: DeviceWaterflow = {
+    waterflow: parseFloat(req.body.waterflow).toFixed(2),
+    timestamp: req.body.timestamp,
+    uid: req.body.uid,
+  };
+  const deviceID = req.body.uid;
 
   if (!data || !deviceID) {
     return res.status(400).json({ error: "Invalid data" });
@@ -28,6 +32,7 @@ export default async function handler(
   if (!business) return res.status(400).json({ error: "Business not found" });
 
   try {
+    //get the user's public key from the contract
     const result = await contract.methods
       .getAddressByDeviceID(deviceID)
       .call({ from: business.publicKey });
@@ -42,21 +47,9 @@ export default async function handler(
 
     //save the data on IPFS, get the hash
     let db = await getDb();
-    let hash;
-    let newData: DeviceData = { data: [data] };
-    const existingDataPoints = (await db.get(deviceID)) as DeviceData;
-    if (existingDataPoints.data) {
-      log("existingDataPoints: " + JSON.stringify(existingDataPoints, null, 2));
-      // Update the existing entry with the new data point
-      const newDataPoints = [...existingDataPoints.data, data];
-      hash = await db.put(deviceID, {
-        ...existingDataPoints,
-        data: newDataPoints,
-      });
-    } else {
-      // Save a new entry with the device ID and the data point
-      hash = await db.put(deviceID, { ...existingDataPoints, newData });
-    }
+    log(data);
+    let hash = await db.add(data);
+
     //find the user by public key
     const user = await User.findOne({ publicKey });
     const account = web3.eth.accounts.decrypt(

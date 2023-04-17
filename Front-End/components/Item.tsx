@@ -1,7 +1,7 @@
-import { DeviceData, DeviceWaterflow } from "../types/orbitDB";
+import { AliasStats, DeviceWaterflow, Stats } from "../types/orbitDB";
 
 type Props = {
-  deviceData: DeviceData;
+  deviceData: AliasStats;
   deviceID: string;
 };
 
@@ -16,18 +16,18 @@ const Item = ({ deviceData, deviceID }: Props) => {
       </div>
       <div className="collapse-content overflow-scroll ">
         <div className="stats stats-vertical lg:stats-horizontal divide-gray-50 shadow sm:max-h-96">
-          {deviceData.data.length === 0 ? (
+          {deviceData.stats.length === 0 ? (
             <div className="stat">
               <div className="stat-title">
                 No data available for this device.
               </div>
             </div>
           ) : (
-            deviceData.data.map((stat: DeviceWaterflow, idx: number) => {
+            deviceData.stats.map((stat: Stats, idx: number) => {
               return (
                 <div className="stat" key={idx as number}>
                   <div className="stat-title">
-                    Stats for {new Date(stat.date).toLocaleString()}
+                    Stats for {new Date(stat.timestamp).toLocaleString()}
                   </div>
                   <div className="stat-value">{stat.waterflow}</div>
                   <div className="stat-desc">↗︎ 400 (22%)</div>

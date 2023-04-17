@@ -24,7 +24,7 @@ const Modal = ({ email }: Props) => {
 
   const addDevice = async () => {
     if (web3 && contract && email) {
-      const res = await axios
+      await axios
         .post(
           "/api/addDevice",
           {

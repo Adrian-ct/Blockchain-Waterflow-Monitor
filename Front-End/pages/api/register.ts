@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../lib/dbConnect";
 import User from "../../model/User";
 import bcrypt from "bcrypt";
-import Account from "../../model/Account";
+import Account from "../../model/Device";
 import { web3, contract } from "../../exports/web3";
 import { log } from "console";
 

@@ -1,13 +1,27 @@
+//Has only the stats
+export type Stats = {
+  waterflow: string;
+  timestamp: string;
+};
+
+export type AliasStats = {
+  alias: string;
+  stats: Stats[];
+};
+
+//Has the stats and the deviceID
+export type DeviceStats = {
+  [deviceID: string]: AliasStats;
+};
+
+//Used for OrbitDB
 export type DeviceWaterflow = {
-  waterflow: number;
-  date: string;
+  waterflow: string;
+  timestamp: string;
+  uid: string;
 };
 
 export type DeviceData = {
   data: DeviceWaterflow[];
-  alias?: string;
-};
-
-export type DeviceStats = {
-  [deviceID: string]: DeviceData;
+  uid: string;
 };

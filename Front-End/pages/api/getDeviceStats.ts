@@ -4,7 +4,8 @@ import { log } from "console";
 import User from "../../model/User";
 import { contract } from "../../exports/web3";
 import getDb from "../../exports/orbitDB";
-import { DeviceStats } from "../../types/orbitDB";
+import { DeviceStats, DeviceWaterflow, Stats } from "../../types/orbitDB";
+import Device from "../../model/Device";
 
 type ResponseData = {
   result?: DeviceStats;
@@ -26,6 +27,7 @@ export default async function handler(
   let devices;
   const user = await User.findOne({ email: email });
   if (!user) return res.status(400).json({ error: "User not found" });
+
   try {
     publicKey = user.publicKey;
     devices = await contract.methods
@@ -37,11 +39,6 @@ export default async function handler(
   }
 
   log(devices, "devices");
-  devices.forEach(async (uid: string) => {
-    const data = await contract.methods
-      .getCIDsByDeviceID(uid)
-      .call({ from: publicKey });
-  });
 
   //The devices were fetched successfully, now we need to get the stats for each device
   let db = await getDb();
@@ -49,17 +46,37 @@ export default async function handler(
 
   await Promise.all(
     devices.map(async (uid: string) => {
-      const dataPoints = await db.get(uid);
-      if (dataPoints) {
-        deviceStats[uid] = dataPoints;
+      const device = await Device.findOne({ uid: uid });
+      const latestDataPoints: Stats[] = await db
+        .iterator({ limit: 20 })
+        .collect()
+        .filter((e: any) => e.payload.value.uid === uid)
+        .map((e: any) => {
+          const { waterflow, timestamp } = e.payload.value as DeviceWaterflow;
+          return { waterflow, timestamp } as Stats;
+        })
+        .sort(
+          (a: Stats, b: Stats) =>
+            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        );
+
+      if (latestDataPoints) {
+        deviceStats[uid] = {
+          alias: device?.alias,
+          stats: latestDataPoints,
+        };
       } else {
-        deviceStats[uid] = { data: [] };
+        deviceStats[uid] = {
+          alias: device?.alias,
+          stats: [],
+        };
       }
+      log(deviceStats, "deviceStats");
     })
   );
 
   //For now
-  delete deviceStats[1];
+  //delete deviceStats[1];
 
   res.status(200).json({ result: deviceStats });
 }

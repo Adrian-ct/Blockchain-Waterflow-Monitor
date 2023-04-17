@@ -29,16 +29,14 @@ const Home: NextPage = () => {
   }, [alertBox.show]);
 
   const onClickHandler4 = async () => {
-    let deviceID = "2";
+    let uid = "2";
     await axios
       .post(
         "/api/addData",
         {
-          deviceID,
-          data: {
-            waterflow: 15,
-            date: new Date().toISOString(),
-          },
+          uid,
+          waterflow: 15,
+          timestamp: new Date(),
         },
         {
           headers: {

@@ -5,7 +5,8 @@ import { ResponseData } from "./register";
 import User from "../../model/User";
 import { web3, contract } from "../../exports/web3";
 import getDb from "../../exports/orbitDB";
-import { DeviceData } from "../../types/orbitDB";
+import { DeviceData, DeviceWaterflow } from "../../types/orbitDB";
+import Device from "../../model/Device";
 
 export default async function handler(
   req: NextApiRequest,
@@ -35,11 +36,10 @@ export default async function handler(
       .call({ from: account.address });
     if (deviceExists) {
       log("Device already exists");
-      res.status(400).json({ error: "Device already exists" });
-      return;
+      return res.status(400).json({ error: "Device already exists" });
     }
+    
     const txObject = await contract.methods.addDevice(uid);
-
     const gasPrice = await web3.eth.getGasPrice();
     const gasLimit = await txObject.estimateGas({ from: account.address });
 
@@ -64,14 +64,15 @@ export default async function handler(
       .json({ error: "Error creating transaction:" + err.message });
   }
 
-  let db = await getDb();
-  const existingDataPoints = await db.get(uid);
-  let newData: DeviceData = {
-    data: [],
-    alias: alias,
-  };
-  if (existingDataPoints) newData.data = existingDataPoints;
-  await db.put(uid, newData);
+  //add the device and alias to mongo db
+  const device = await Device.findOne({ uid: uid });
+  if (!device) {
+    const newDevice = new Device({
+      uid: uid,
+      alias: alias,
+    });
+    await newDevice.save();
+  }
 
   res.status(200).json({ msg: "Device added succesfully" });
 }

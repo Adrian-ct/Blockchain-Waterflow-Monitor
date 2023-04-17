@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
-import { DeviceStats } from "../types/orbitDB";
+import { AliasStats, DeviceStats } from "../types/orbitDB";
 import AlertBox from "../components/AlertBox";
 import { useRecoilState } from "recoil";
 import { alertBoxAtom } from "../atoms/atom";
@@ -55,7 +55,7 @@ const Profile: NextPage = () => {
         return (
           <Item
             deviceID={deviceId}
-            deviceData={devices[deviceId]}
+            deviceData={devices[parseInt(deviceId)] as AliasStats}
             key={idx as number}
           />
         );

@@ -8,9 +8,9 @@ async function createOrbitDB() {
   try {
     const ipfs = create({ url: "/ip4/127.0.0.1/tcp/5001" });
     const orbitdb = await OrbitDB.createInstance(ipfs, {
-      directory: "./orbitdb/examples/keyvalue",
+      directory: "./orbitdb/examples/eventlog",
     });
-    dbLog = await orbitdb.keyvalue("waterflow");
+    dbLog = await orbitdb.eventlog("waterflow");
     await dbLog.load();
     log(dbLog.address.toString() + " was created");
     dbLog.events.on("write", (address: any, entry: any, heads: any) => {

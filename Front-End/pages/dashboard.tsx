@@ -5,7 +5,7 @@ import Card from "../components/Card";
 import { BarChart } from "../components/charts/barChart";
 const Profile: NextPage = () => {
   return (
-    <div className="w-[85%] lg:p-4 m-auto flex flex-col gap-4 items-center justify-center">
+    <div className="w-[85%] mt-5 lg:p-10 m-auto flex flex-col gap-4 items-center justify-center glass">
       <div className="flex justify-center items-center gap-5">
         <PieChart />
         <BarChart />
