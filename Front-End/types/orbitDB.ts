@@ -20,8 +20,3 @@ export type DeviceWaterflow = {
   timestamp: string;
   uid: string;
 };
-
-export type DeviceData = {
-  data: DeviceWaterflow[];
-  uid: string;
-};

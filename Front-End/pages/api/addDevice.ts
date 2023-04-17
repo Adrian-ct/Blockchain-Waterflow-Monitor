@@ -5,7 +5,7 @@ import { ResponseData } from "./register";
 import User from "../../model/User";
 import { web3, contract } from "../../exports/web3";
 import getDb from "../../exports/orbitDB";
-import { DeviceData, DeviceWaterflow } from "../../types/orbitDB";
+import { DeviceWaterflow } from "../../types/orbitDB";
 import Device from "../../model/Device";
 
 export default async function handler(
@@ -38,7 +38,7 @@ export default async function handler(
       log("Device already exists");
       return res.status(400).json({ error: "Device already exists" });
     }
-    
+
     const txObject = await contract.methods.addDevice(uid);
     const gasPrice = await web3.eth.getGasPrice();
     const gasLimit = await txObject.estimateGas({ from: account.address });
