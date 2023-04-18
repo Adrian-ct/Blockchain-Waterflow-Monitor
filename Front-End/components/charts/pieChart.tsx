@@ -1,98 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { RecurrentStats } from "../../pages/api/getMonthlyStats";
+import axios from "axios";
 
-export const Data = [
-  {
-    id: 1,
-    year: 2016,
-    userGain: 80000,
-  },
-  {
-    id: 2,
-    year: 2017,
-    userGain: 45677,
-  },
-  {
-    id: 3,
-    year: 2018,
-    userGain: 78888,
-  },
-  {
-    id: 4,
-    year: 2019,
-    userGain: 90000,
-  },
-  {
-    id: 5,
-    year: 2020,
-    userGain: 4300,
-  },
-  {
-    id: 6,
-    year: 2020,
-    userGain: 4300,
-  },
-  {
-    id: 7,
-    year: 2020,
-    userGain: 4300,
-  },
-  {
-    id: 8,
-    year: 2020,
-    userGain: 4300,
-  },
-  {
-    id: 9,
-    year: 2020,
-    userGain: 4300,
-  },
-  {
-    id: 10,
-    year: 2020,
-    userGain: 4300,
-  },
-  {
-    id: 11,
-    year: 2020,
-    userGain: 4300,
-  },
-  {
-    id: 12,
-    year: 2020,
-    userGain: 4300,
-  },
-  {
-    id: 13,
-    year: 2020,
-    userGain: 4300,
-  },
-  {
-    id: 14,
-    year: 2020,
-    userGain: 4300,
-  },
-  {
-    id: 15,
-    year: 2020,
-    userGain: 4300,
-  },
-];
+type Props = {
+  email: string;
+};
 
-const PieChart = () => {
+const PieChart = ({ email }: Props) => {
   ChartJS.register(ArcElement, Tooltip, Legend);
 
+  const [monthlyStats, setMonthlyStats] = useState<RecurrentStats[]>([]);
+
   const [chartData, setChartData] = useState({
-    labels: Data.map((data) => data.year),
+    labels: [],
     datasets: [
       {
-        label: "Users Gained ",
-        data: Data.map((data) => data.userGain),
+        label: "Liters of water consumed ",
+        data: [],
         backgroundColor: [
           "rgba(75,192,192,1)",
-          "#ecf0f1",
-          "#50AF95",
+          "#00ccff",
+          "#00775f",
           "#f3ba2f",
           "#2a71d0",
         ],
@@ -101,10 +31,54 @@ const PieChart = () => {
       },
     ],
   });
+
+  async function getMonthlyStats() {
+    try {
+      const response = await axios.get("/api/getMonthlyStats", {
+        params: { email },
+      });
+      console.log(response.data.result);
+      setMonthlyStats(response.data.result);
+    } catch (error: any) {
+      console.log(error.response?.data?.error);
+    }
+  }
+
+  useEffect(() => {
+    if (!monthlyStats || monthlyStats.length === 0) {
+      getMonthlyStats();
+    }
+  }, [monthlyStats, email]);
+
+  useEffect(() => {
+    if (!monthlyStats) return;
+    const labels = monthlyStats.map((obj) => Object.keys(obj)[0]);
+    const waterflow = monthlyStats.map((obj) => Object.values(obj)[0]);
+
+    setChartData({
+      labels: labels as never[],
+      datasets: [
+        {
+          label: "Liters of water consumed ",
+          data: waterflow as never[],
+          backgroundColor: [
+            "#2c7db7",
+            "#00ccff",
+            "#1445ae",
+            "#0d00ff",
+            "#006eff",
+          ],
+          borderColor: "black",
+          borderWidth: 2,
+        },
+      ],
+    });
+  }, [monthlyStats]);
+
   return (
     <div className="bg-white shadow-sm">
       <div className="chart-container">
-        <h2 style={{ textAlign: "center" }}>Water Consumption by Month</h2>
+        <h2 style={{ textAlign: "center" }}>Water Consumption by Day</h2>
         <Pie
           data={chartData}
           width={500}

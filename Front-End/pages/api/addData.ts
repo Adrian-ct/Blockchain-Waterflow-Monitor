@@ -18,9 +18,9 @@ export default async function handler(
       .json({ error: "This API call only accepts POST methods" });
   }
   const data: DeviceWaterflow = {
-    waterflow: parseFloat(req.body.waterflow).toFixed(2),
-    timestamp: req.body.timestamp,
-    uid: req.body.uid,
+    waterflow: parseFloat(req.body?.waterflow).toFixed(2),
+    timestamp: req.body?.timestamp,
+    uid: req.body?.uid,
   };
   const deviceID = req.body.uid;
 
@@ -39,8 +39,6 @@ export default async function handler(
 
     const [publicKey, isAddressValid] = [result["0"], result["1"]];
 
-    log("publicKey: " + publicKey);
-    log("isAddressValid: " + isAddressValid);
     if (!isAddressValid) {
       return res.status(400).json({ error: "Device not found" });
     }

@@ -2,10 +2,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { log } from "console";
 import User from "../../model/User";
-import { contract } from "../../exports/web3";
 import getDb from "../../exports/orbitDB";
 import { DeviceStats, DeviceWaterflow, Stats } from "../../types/orbitDB";
 import Device from "../../model/Device";
+import { getDevices } from "../../utils/getPrivateKey";
 
 type ResponseData = {
   result?: DeviceStats;
@@ -21,22 +21,15 @@ export default async function handler(
       .status(400)
       .json({ error: "This API call only accepts GET methods" });
   }
-  let publicKey: string;
   const { email } = req.query;
   if (!email) return res.status(400).json({ error: "Email is empty" });
   let devices;
   const user = await User.findOne({ email: email });
   if (!user) return res.status(400).json({ error: "User not found" });
 
-  try {
-    publicKey = user.publicKey;
-    devices = await contract.methods
-      .getDeviceIDsByUser(publicKey)
-      .call({ from: publicKey });
-  } catch (err: any) {
-    log(err);
+  devices = await getDevices(user.publicKey);
+  if (!devices)
     return res.status(400).json({ error: "Error while fetching devices" });
-  }
 
   log(devices, "devices");
 
@@ -48,9 +41,12 @@ export default async function handler(
     devices.map(async (uid: string) => {
       const device = await Device.findOne({ uid: uid });
       const latestDataPoints: Stats[] = await db
-        .iterator({ limit: 20 })
+        .iterator({ limit: -1 })
         .collect()
-        .filter((e: any) => e.payload.value.uid === uid)
+        .filter((e: any) => {
+          const isValid = e.payload.value.uid === uid;
+          return isValid;
+        })
         .map((e: any) => {
           const { waterflow, timestamp } = e.payload.value as DeviceWaterflow;
           return { waterflow, timestamp } as Stats;
@@ -71,12 +67,9 @@ export default async function handler(
           stats: [],
         };
       }
-      log(deviceStats, "deviceStats");
     })
   );
 
-  //For now
-  //delete deviceStats[1];
-
+  log(deviceStats, "deviceStats");
   res.status(200).json({ result: deviceStats });
 }

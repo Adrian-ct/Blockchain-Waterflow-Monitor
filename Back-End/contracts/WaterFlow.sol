@@ -6,9 +6,11 @@ contract WaterFlow {
     mapping (string => string[]) public deviceCIDs;
     mapping (string => address) public deviceToOwner; 
 
+    event WaterFlowDataAdded(string indexed deviceId, string CID);
+
     function addWaterFlowData(string memory deviceID, string memory CID) public {
         deviceCIDs[deviceID].push(CID);
-        userDevices[msg.sender].push(deviceID);
+        emit WaterFlowDataAdded(deviceID, CID);
     }
     
     function addDevice(string memory deviceId) public {
