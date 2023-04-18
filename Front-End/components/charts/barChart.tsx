@@ -55,7 +55,7 @@ export const BarChart = ({ email }: Props) => {
     if (!dailyStats || dailyStats.length === 0) {
       getDailyStats();
     }
-  }, [dailyStats, email]);
+  }, [email]);
 
   useEffect(() => {
     if (!dailyStats) return;

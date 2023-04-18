@@ -5,7 +5,7 @@ import User from "../../model/User";
 import getDb from "../../exports/orbitDB";
 import { DeviceStats, DeviceWaterflow, Stats } from "../../types/orbitDB";
 import Device from "../../model/Device";
-import { getDevices } from "../../utils/getPrivateKey";
+import { getDevices } from "../../utils/contractHelpers";
 
 type ResponseData = {
   result?: DeviceStats;
@@ -22,6 +22,8 @@ export default async function handler(
       .json({ error: "This API call only accepts GET methods" });
   }
   const { email } = req.query;
+  const { limit } = req.query;
+
   if (!email) return res.status(400).json({ error: "Email is empty" });
   let devices;
   const user = await User.findOne({ email: email });
@@ -54,7 +56,8 @@ export default async function handler(
         .sort(
           (a: Stats, b: Stats) =>
             new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-        );
+        )
+        .slice(0, limit);
 
       if (latestDataPoints) {
         deviceStats[uid] = {

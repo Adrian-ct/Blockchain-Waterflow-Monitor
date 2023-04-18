@@ -7,29 +7,29 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
-import { useState, useEffect } from "react";
 
 type Props = {
   width: number;
   height: number;
   room: string;
+  labels: string[];
+  data: number[];
 };
 
-const LineChart = ({ width, height, room }: Props) => {
-  ChartJS.register(
-    ArcElement,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement
-  );
-
-  const [chartData, setChartData] = useState({
-    labels: [],
+ChartJS.register(
+  ArcElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement
+);
+const LineChart = ({ width, height, room, labels, data }: Props) => {
+  const chartData = {
+    labels: labels,
     datasets: [
       {
         label: "Water Consumption",
-        data: [],
+        data: data,
         backgroundColor: [
           "rgba(75,192,192,1)",
           "#ecf0f1",
@@ -44,29 +44,37 @@ const LineChart = ({ width, height, room }: Props) => {
         pointRadius: 5,
       },
     ],
-  });
+  };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const newChartData = { ...chartData };
-      if (newChartData.labels.length > 15) {
-        newChartData.labels.shift();
-        newChartData.datasets[0].data.shift();
-        newChartData.labels.push("");
-        newChartData.datasets[0].data.push(
-          Math.floor(Math.random() * 100) as never
-        );
-      } else {
-        newChartData.labels.push("");
-        newChartData.datasets[0].data.push(
-          Math.floor(Math.random() * 100) as never
-        );
-      }
-      setChartData(newChartData);
-    }, 1000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const newChartData = { ...chartData };
+  //     if (newChartData.labels.length > 15) {
+  //       newChartData.labels.shift();
+  //       newChartData.datasets[0].data.shift();
+  //       newChartData.labels.push("" as never);
+  //       newChartData.datasets[0].data.push(
+  //         Math.floor(Math.random() * 100) as never
+  //       );
+  //       //test
+  //       // newChartData.datasets[1].data.push(
+  //       //   Math.floor(Math.random() * 100) as never
+  //       // );
+  //     } else {
+  //       newChartData.labels.push("" as never);
+  //       newChartData.datasets[0].data.push(
+  //         Math.floor(Math.random() * 100) as never
+  //       );
+  //       //test
+  //       // newChartData.datasets[1].data.push(
+  //       //   Math.floor(Math.random() * 100) as never
+  //       // );
+  //     }
+  //     setChartData(newChartData);
+  //   }, 1000);
 
-    return () => clearInterval(interval);
-  }, [chartData]);
+  //   return () => clearInterval(interval);
+  // }, [chartData]);
 
   return (
     <div className="bg-white">

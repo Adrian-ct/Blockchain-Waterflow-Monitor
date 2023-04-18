@@ -45,7 +45,6 @@ export default async function handler(
 
     //save the data on IPFS, get the hash
     let db = await getDb();
-    log(data);
     let hash = await db.add(data);
 
     //find the user by public key

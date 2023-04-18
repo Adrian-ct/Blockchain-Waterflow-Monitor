@@ -48,7 +48,7 @@ const PieChart = ({ email }: Props) => {
     if (!monthlyStats || monthlyStats.length === 0) {
       getMonthlyStats();
     }
-  }, [monthlyStats, email]);
+  }, [email]);
 
   useEffect(() => {
     if (!monthlyStats) return;

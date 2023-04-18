@@ -18,7 +18,7 @@ const Profile: NextPage = () => {
     let email = session?.user?.email as string;
     if (!email) return;
     axios
-      .get("/api/getDeviceStats", { params: { email } })
+      .get("/api/getDeviceStats", { params: { email, limit: -1 } })
       .then(function (response) {
         console.log(response.data.result);
         setDevices(response.data.result);

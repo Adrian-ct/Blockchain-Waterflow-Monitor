@@ -1,6 +1,6 @@
 // callContract.ts
 import { web3, contract } from "../exports/web3";
-import { getPrivateKey } from "./getPrivateKey";
+import { getPrivateKey } from "./contractHelpers";
 
 export async function callContract(
   email: string,
@@ -8,7 +8,6 @@ export async function callContract(
   setAlertBox: Function,
   setModal: Function
 ): Promise<void> {
-  
   const privateKey = await getPrivateKey(email);
 
   if (privateKey) {

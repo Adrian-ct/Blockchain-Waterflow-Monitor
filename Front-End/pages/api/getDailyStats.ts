@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { log } from "console";
 import getDb from "../../exports/orbitDB";
 import User from "../../model/User";
-import { getDevices } from "../../utils/getPrivateKey";
+import { getDevices } from "../../utils/contractHelpers";
 import Device from "../../model/Device";
 import { DeviceWaterflow, Stats } from "../../types/orbitDB";
 import { RecurrentStats } from "./getMonthlyStats";

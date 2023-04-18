@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { log } from "console";
 import getDb from "../../exports/orbitDB";
 import User from "../../model/User";
-import { getDevices } from "../../utils/getPrivateKey";
+import { getDevices } from "../../utils/contractHelpers";
 import Device from "../../model/Device";
 import { DeviceWaterflow, Stats } from "../../types/orbitDB";
 
@@ -39,7 +39,6 @@ export default async function handler(
 
   if (!devices)
     return res.status(200).json({ error: "Error while fetching devices" });
-  log(devices, "devices");
   let db = await getDb();
 
   let monthlyStats: RecurrentStats[] = [];
