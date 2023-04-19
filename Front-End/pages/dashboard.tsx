@@ -40,7 +40,6 @@ const Dashboard: NextPage = () => {
       .on("data", async (event: WaterflowDataAddedEvent) => {
         let CID = event.returnValues[1];
         let deviceID = event.returnValues[0];
-        console.log(deviceID);
         try {
           const response = await axios.get("/api/getLatestWaterflow", {
             params: {

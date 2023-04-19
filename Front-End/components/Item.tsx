@@ -1,3 +1,4 @@
+import React from "react";
 import { AliasStats, DeviceWaterflow, Stats } from "../types/orbitDB";
 
 type Props = {
@@ -12,7 +13,7 @@ const Item = ({ deviceData, deviceID }: Props) => {
       className="collapse sm:w-6/12 lg:w-2/5 text-white bg-purple-800 collapse-arrow border border-base-300 rounded-box"
     >
       <div className="collapse-title text-xl font-medium text-center">
-        {deviceData.alias ? `${deviceData.alias}(${deviceID})` : deviceID}
+        {deviceData.alias ? `${deviceData.alias} #${deviceID}` : deviceID}
       </div>
       <div className="collapse-content overflow-scroll ">
         <div className="stats stats-vertical lg:stats-horizontal divide-gray-50 shadow sm:max-h-96">
@@ -41,4 +42,4 @@ const Item = ({ deviceData, deviceID }: Props) => {
   );
 };
 
-export default Item;
+export default React.memo(Item);

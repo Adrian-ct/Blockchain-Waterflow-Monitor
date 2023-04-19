@@ -33,8 +33,6 @@ export default async function handler(
   if (!devices)
     return res.status(400).json({ error: "Error while fetching devices" });
 
-  log(devices, "devices");
-
   //The devices were fetched successfully, now we need to get the stats for each device
   let db = await getDb();
   let deviceStats: DeviceStats = {};
@@ -73,6 +71,5 @@ export default async function handler(
     })
   );
 
-  log(deviceStats, "deviceStats");
   res.status(200).json({ result: deviceStats });
 }
