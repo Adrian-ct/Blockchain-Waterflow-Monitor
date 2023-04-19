@@ -28,7 +28,7 @@ const LineChart = ({ width, height, room, labels, data }: Props) => {
     labels: labels,
     datasets: [
       {
-        label: "Water Consumption",
+        label: "Water Consumption (L)",
         data: data,
         backgroundColor: [
           "rgba(75,192,192,1)",
@@ -45,36 +45,6 @@ const LineChart = ({ width, height, room, labels, data }: Props) => {
       },
     ],
   };
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     const newChartData = { ...chartData };
-  //     if (newChartData.labels.length > 15) {
-  //       newChartData.labels.shift();
-  //       newChartData.datasets[0].data.shift();
-  //       newChartData.labels.push("" as never);
-  //       newChartData.datasets[0].data.push(
-  //         Math.floor(Math.random() * 100) as never
-  //       );
-  //       //test
-  //       // newChartData.datasets[1].data.push(
-  //       //   Math.floor(Math.random() * 100) as never
-  //       // );
-  //     } else {
-  //       newChartData.labels.push("" as never);
-  //       newChartData.datasets[0].data.push(
-  //         Math.floor(Math.random() * 100) as never
-  //       );
-  //       //test
-  //       // newChartData.datasets[1].data.push(
-  //       //   Math.floor(Math.random() * 100) as never
-  //       // );
-  //     }
-  //     setChartData(newChartData);
-  //   }, 1000);
-
-  //   return () => clearInterval(interval);
-  // }, [chartData]);
 
   return (
     <div className="bg-white border-dashboard">

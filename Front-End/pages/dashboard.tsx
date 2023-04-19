@@ -18,7 +18,7 @@ const Dashboard: NextPage = () => {
     let email = session?.user?.email as string;
     if (!email) return;
     axios
-      .get("/api/getDeviceStats", { params: { email, limit: 10 } })
+      .get("/api/getDeviceStats", { params: { email, limit: 15 } })
       .then(function (response) {
         setDevices(response.data.result);
       })
@@ -48,8 +48,14 @@ const Dashboard: NextPage = () => {
           });
 
           let newDeviceData = { ...devices[deviceID] };
-          newDeviceData.stats.pop();
-          newDeviceData.stats.unshift(response.data.result);
+          if (newDeviceData.stats.length > 15) {
+            newDeviceData.stats.pop();
+            newDeviceData.stats.unshift(response.data.result);
+            console.log("popped");
+          } else {
+            console.log("pushed");
+            newDeviceData.stats.push([response.data.result] as any);
+          }
           setDevices({
             ...devices,
             [deviceID]: newDeviceData,
@@ -76,24 +82,24 @@ const Dashboard: NextPage = () => {
       </div>
       <div className="grid grid-cols-5 divide-x-2">
         <Card
-          title="Info!"
-          text="In 50 years water will be much more scarse than today"
+          title="Increased water scarcity"
+          text="By 2025, it's predicted that approximately two-thirds of the global population could experience water shortages. This is due to the growing demand for water, increased pollution, and climate change, leading to less availability of fresh water sources."
         />
         <Card
-          title="Info!"
-          text="In 50 years water will be much more scarse than today"
+          title="Agriculture impacts"
+          text="Agriculture accounts for around 70% of global freshwater use. As the global population increases, the demand for food will grow, putting additional pressure on already stressed water resources. This could lead to a decrease in food production, which may result in food shortages and increased food prices."
         />
         <Card
-          title="Info!"
-          text="In 50 years water will be much more scarse than today"
+          title="Decline in water quality"
+          text="Pollution from industrial and agricultural activities continues to contaminate fresh water sources. If we don't take action to reduce pollution, the quality of available water will decline, leading to increased health risks for humans, as well as negative impacts on ecosystems and biodiversity."
         />
         <Card
-          title="Info!"
-          text="In 50 years water will be much more scarse than today"
+          title="Increased conflicts over water resources"
+          text="Water scarcity is likely to exacerbate conflicts between countries and regions sharing water resources. As demand for water increases, tensions may rise, leading to political instability and potential conflicts."
         />
         <Card
-          title="Info!"
-          text="In 50 years water will be much more scarse than today"
+          title="Economic consequences"
+          text="Water scarcity can have significant economic implications, especially in water-intensive industries such as agriculture, energy production, and manufacturing. A lack of access to clean water can hinder economic development, leading to job losses and reduced economic growth."
         />
       </div>
       <div className="grid grid-cols-2 gap-2">
