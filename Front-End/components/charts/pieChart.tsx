@@ -76,7 +76,7 @@ const PieChart = ({ email }: Props) => {
   }, [monthlyStats]);
 
   return (
-    <div className="bg-white shadow-sm">
+    <div className="bg-white shadow-sm border-dashboard">
       <div className="chart-container">
         <h2 style={{ textAlign: "center" }}>Water Consumption by Day</h2>
         <Pie

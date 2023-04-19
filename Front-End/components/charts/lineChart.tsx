@@ -77,7 +77,7 @@ const LineChart = ({ width, height, room, labels, data }: Props) => {
   // }, [chartData]);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white border-dashboard">
       <h2 className="text-center font-bold text-blue-500">{room}</h2>
       <Line
         data={chartData}

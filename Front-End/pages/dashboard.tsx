@@ -74,7 +74,7 @@ const Dashboard: NextPage = () => {
         <PieChart email={session?.user?.email as string} />
         <BarChart email={session?.user?.email as string} />
       </div>
-      <div className="grid grid-cols-5  border-blue-500 divide-x-2">
+      <div className="grid grid-cols-5 divide-x-2">
         <Card
           title="Info!"
           text="In 50 years water will be much more scarse than today"

@@ -83,7 +83,7 @@ export const BarChart = ({ email }: Props) => {
   }, [dailyStats]);
 
   return (
-    <div className="bg-white shadow-sm">
+    <div className="bg-white shadow-sm border-dashboard">
       <div className="chart-container">
         <h2 style={{ textAlign: "center" }}>
           Water Consumption at {getPreviousHourAMPM()}

@@ -37,3 +37,9 @@
     transform: scaleX(0);
   }
 }
+
+.border-dashboard {
+  border-color: rgb(0, 32, 162);
+  border-width: 2.5px;
+  border-style: dashed;
+}

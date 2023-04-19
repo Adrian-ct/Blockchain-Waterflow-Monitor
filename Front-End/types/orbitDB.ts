@@ -7,6 +7,7 @@ export type Stats = {
 export type AliasStats = {
   alias: string;
   stats: Stats[];
+  active?: boolean;
 };
 
 //Has the stats and the deviceID

@@ -32,6 +32,7 @@ export default async function handler(
   devices = await getDevices(user.publicKey);
   if (!devices)
     return res.status(400).json({ error: "Error while fetching devices" });
+  log(devices, "devices");
 
   //The devices were fetched successfully, now we need to get the stats for each device
   let db = await getDb();
@@ -61,11 +62,13 @@ export default async function handler(
         deviceStats[uid] = {
           alias: device?.alias,
           stats: latestDataPoints,
+          active: device?.active,
         };
       } else {
         deviceStats[uid] = {
           alias: device?.alias,
           stats: [],
+          active: device?.active,
         };
       }
     })
