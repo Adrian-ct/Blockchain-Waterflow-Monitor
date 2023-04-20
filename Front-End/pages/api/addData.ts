@@ -5,6 +5,7 @@ import User from "../../model/User";
 import { contract, web3 } from "../../exports/web3";
 import getDb from "../../exports/orbitDB";
 import { DeviceWaterflow } from "../../types/orbitDB";
+import Device from "../../model/Device";
 
 const BUSINESS_EMAIL = "business@yahoo.com";
 
@@ -42,6 +43,11 @@ export default async function handler(
     if (!isAddressValid) {
       return res.status(400).json({ error: "Device not found" });
     }
+
+    //check if the device is active
+    const device = await Device.findOne({ deviceID });
+    if (device.active === false)
+      return res.status(400).json({ error: "Device is not active" });
 
     //save the data on IPFS, get the hash
     let db = await getDb();
