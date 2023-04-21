@@ -9,7 +9,7 @@ import { contract } from "../exports/web3";
 import axios from "axios";
 import { WaterflowDataAddedEvent } from "../types/web3";
 import { DeviceStats } from "../types/orbitDB";
-
+import withAuth from "../components/withAuth";
 const Dashboard: NextPage = () => {
   const [devices, setDevices] = useState<DeviceStats>({});
   const { data: session } = useSession();
@@ -150,4 +150,4 @@ const Dashboard: NextPage = () => {
   );
 };
 
-export default Dashboard;
+export default withAuth(Dashboard);

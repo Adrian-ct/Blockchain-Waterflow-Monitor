@@ -8,6 +8,7 @@ import AlertBox from "../components/AlertBox";
 import { useRecoilState } from "recoil";
 import { alertBoxAtom } from "../atoms/atom";
 import Tab1 from "../components/profileTabs/Tab1";
+import withAuth from "../components/withAuth";
 
 const Profile: NextPage = () => {
   const [devices, setDevices] = useState<DeviceStats>({});
@@ -70,4 +71,4 @@ const Profile: NextPage = () => {
   );
 };
 
-export default Profile;
+export default withAuth(Profile);

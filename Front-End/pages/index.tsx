@@ -6,6 +6,7 @@ import { alertBoxAtom } from "../atoms/atom";
 import Background from "../components/Background";
 import Modal from "../components/Modal";
 import ExchangeRates from "../components/index/ExchangeRates";
+import withAuth from "../components/withAuth";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -37,4 +38,4 @@ const Home: NextPage = () => {
   }
 };
 
-export default Home;
+export default withAuth(Home);
