@@ -28,7 +28,7 @@ const Dashboard: NextPage = () => {
   };
 
   useEffect(() => {
-    if (!devices.length) getDeviceStats();
+    if (!Object.keys(devices).length) getDeviceStats();
   }, [session]);
 
   useEffect(() => {
@@ -38,8 +38,9 @@ const Dashboard: NextPage = () => {
         console.log("Connected");
       })
       .on("data", async (event: WaterflowDataAddedEvent) => {
-        let CID = event.returnValues[1];
         let deviceID = event.returnValues[0];
+        let CID = event.returnValues[1];
+
         try {
           const response = await axios.get("/api/getLatestWaterflow", {
             params: {
@@ -47,18 +48,30 @@ const Dashboard: NextPage = () => {
             },
           });
 
-          let newDeviceData = { ...devices[deviceID] };
-          if (newDeviceData.stats.length > 15) {
-            newDeviceData.stats.pop();
-            newDeviceData.stats.unshift(response.data.result);
-            console.log("popped");
-          } else {
-            console.log("pushed");
-            newDeviceData.stats.push([response.data.result] as any);
-          }
-          setDevices({
-            ...devices,
-            [deviceID]: newDeviceData,
+          setDevices((prevDevices) => {
+            let newDeviceData = { ...prevDevices[deviceID] };
+
+            if (newDeviceData.stats.length >= 15) {
+              newDeviceData.stats.pop();
+            }
+
+            // Check if the new value is already in the array
+            const isNewValueInArray = newDeviceData.stats.some(
+              (stat) => stat.timestamp === response.data.result.timestamp
+            );
+
+            // If the new value is not in the array, add it to the beginning
+            if (!isNewValueInArray) {
+              return {
+                ...prevDevices,
+                [deviceID]: {
+                  ...newDeviceData,
+                  stats: [response.data.result, ...newDeviceData.stats],
+                },
+              };
+            } else {
+              return prevDevices;
+            }
           });
         } catch (error) {
           console.error("Error fetching latest waterflow data:", error);
