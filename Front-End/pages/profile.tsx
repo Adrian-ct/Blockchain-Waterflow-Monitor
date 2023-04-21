@@ -2,11 +2,7 @@ import axios from "axios";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import Modal from "../components/Modal";
 import { DeviceStats } from "../types/orbitDB";
-import AlertBox from "../components/AlertBox";
-import { useRecoilState } from "recoil";
-import { alertBoxAtom } from "../atoms/atom";
 import Tab1 from "../components/profileTabs/Tab1";
 import withAuth from "../components/withAuth";
 
@@ -14,7 +10,6 @@ const Profile: NextPage = () => {
   const [devices, setDevices] = useState<DeviceStats>({});
 
   const { data: session } = useSession();
-  const [alertBox, setAlertBox] = useRecoilState(alertBoxAtom);
   const [activeTab, setActiveTab] = useState<number>(1);
 
   const getDeviceStats = async () => {
@@ -37,12 +32,6 @@ const Profile: NextPage = () => {
 
   return (
     <div className="flex flex-col gap-6 justify-center items-center w-full">
-      <Modal email={session?.user?.email as string} />
-      {alertBox.show && (
-        <div className="fixed w-2/5 left-1/2 -translate-x-1/2 bottom-10">
-          <AlertBox message={alertBox.message} error={alertBox.error} />{" "}
-        </div>
-      )}
       <div className="tabs tabs-boxed">
         <div
           id="_tab1"

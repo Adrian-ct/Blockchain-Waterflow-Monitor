@@ -4,17 +4,33 @@ import NavBar from "../components/NavBar";
 import { SessionProvider } from "next-auth/react";
 import { RecoilRoot } from "recoil";
 import Background from "../components/Background";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <RecoilRoot>
-      <SessionProvider session={session}>
-        <Background>
-          <NavBar />
-          <Component {...pageProps} />
-        </Background>
-      </SessionProvider>
-    </RecoilRoot>
+    <>
+      <ToastContainer
+        position="bottom-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover={false}
+        theme="light"
+      />
+      <RecoilRoot>
+        <SessionProvider session={session}>
+          <Background>
+            <NavBar />
+            <Component {...pageProps} />
+          </Background>
+        </SessionProvider>
+      </RecoilRoot>
+    </>
   );
 }
 

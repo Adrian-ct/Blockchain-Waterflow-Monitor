@@ -5,12 +5,4 @@ export const modalAtom = atom({
   default: false, // default value (aka initial value)
 });
 
-//atom for alertbox
-export const alertBoxAtom = atom({
-  key: "alertBoxAtom", // unique ID (with respect to other atoms/selectors)
-  default: {
-    show: false,
-    message: "",
-    error: false,
-  }, // default value (aka initial value)
-});
+

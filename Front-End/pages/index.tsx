@@ -1,8 +1,5 @@
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
-import { useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { alertBoxAtom } from "../atoms/atom";
 import Background from "../components/Background";
 import Modal from "../components/Modal";
 import ExchangeRates from "../components/index/ExchangeRates";
@@ -10,15 +7,6 @@ import withAuth from "../components/withAuth";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
-  const [alertBox, setAlertBox] = useRecoilState(alertBoxAtom);
-
-  useEffect(() => {
-    let timer = setTimeout(
-      () => setAlertBox({ show: false, message: "", error: false }),
-      4000
-    );
-    return () => clearTimeout(timer);
-  }, [alertBox.show]);
 
   if (session) {
     return (

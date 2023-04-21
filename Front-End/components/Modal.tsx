@@ -1,17 +1,17 @@
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { alertBoxAtom, modalAtom } from "../atoms/atom";
+import { modalAtom } from "../atoms/atom";
 import { useState } from "react";
 import { web3, contract } from "../exports/web3";
 import axios from "axios";
 import { TransactionReceipt } from "web3-core";
 import { log } from "console";
+import showToastMessage from "../utils/showToastMessage";
 
 type Props = {
   email: string;
 };
 
 const Modal = ({ email }: Props) => {
-  const setAlertBox = useSetRecoilState(alertBoxAtom);
   const [uid, setUid] = useState<string>("");
   const [alias, setAlias] = useState<string>("");
   const [modal, setModal] = useRecoilState(modalAtom);
@@ -40,20 +40,11 @@ const Modal = ({ email }: Props) => {
           }
         )
         .then(function (response) {
-          setAlertBox({
-            show: true,
-            message: response.data.msg,
-            error: false,
-          });
+          showToastMessage(response.data.msg, "success");
           setModal(false);
         })
         .catch(function (error) {
-          console.log(error.response);
-          setAlertBox({
-            show: true,
-            message: error.response?.data?.error || "An error occurred",
-            error: true,
-          });
+          showToastMessage(error.response?.data?.error, "error");
           setModal(false);
         });
     }
@@ -86,7 +77,7 @@ const Modal = ({ email }: Props) => {
           </label>
           <label className="label">
             <span className="label-text">
-              Device's Unique ID (Can be found on the back)
+              Device&apos;s Unique ID (Can be found on the back)
             </span>
           </label>
           <label className="input-group">
