@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { Field, Form, Formik } from "formik";
-
+import { FiEye, FiEyeOff } from "react-icons/fi";
 interface IDivicerProps {
   word?: string;
 }
@@ -37,7 +37,12 @@ const Auth: NextPage = ({ providers }: any) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  //Const providerButtons not needed
+  //Hide/Show password
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const redirectToHome = () => {
     const { pathname } = Router;
@@ -85,7 +90,7 @@ const Auth: NextPage = ({ providers }: any) => {
   };
 
   return (
-    <div className="h-3/5 w-[22%] rounded-md m-auto glass bg-gradient-to-br p-12">
+    <div className="h-3/5 w-[27%] rounded-md m-auto glass bg-gradient-to-br p-12">
       <div className="flex flex-col justify-center items-center w-full">
         <h1 className="text-2xl text-white">{authType}</h1>
         <div className="text-sm mb-6 text-white w-full">
@@ -145,9 +150,16 @@ const Auth: NextPage = ({ providers }: any) => {
                           className="input input-bordered w-full max-w-md"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          type="password"
+                          type={showPassword ? "text" : "password"}
                           placeholder="Password"
                         />
+                        <button
+                          className="btn text-white underline  bg-transparent border-none hover:bg-transparent"
+                          onClick={togglePasswordVisibility}
+                          type="button"
+                        >
+                          {showPassword ? "Hide Password" : "Show Password"}
+                        </button>
                       </div>
                     )}
                   </Field>
