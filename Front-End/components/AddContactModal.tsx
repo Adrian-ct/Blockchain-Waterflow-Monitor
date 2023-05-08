@@ -1,57 +1,82 @@
-import { useState } from "react";
-import { web3, contract } from "../exports/web3";
+import { MouseEvent, useState } from "react";
 import axios from "axios";
 import showToastMessage from "../utils/showToastMessage";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import avatarw1 from "../public/images/avatarw1.png";
+import avatarw2 from "../public/images/avatarw2.png";
+import avatarm1 from "../public/images/avatarm1.png";
+import avatarm2 from "../public/images/avatarm2.png";
+import { contact } from "../types/fullstack";
 
-type SetActive = (value: boolean | ((prevState: boolean) => boolean)) => void;
+type setActive = (value: boolean | ((prevState: boolean) => boolean)) => void;
+type setContacts = (
+  value: contact[] | ((prevState: contact[]) => contact[])
+) => void;
 
 type Props = {
   active: boolean;
-  setActive: SetActive;
+  setActive: setActive;
+  setContacts: setContacts;
+  contacts: contact[];
 };
 
-const maximumMessageLength = 750;
-const AddContactModal = ({ active, setActive }: Props) => {
+const AddContactModal = ({
+  active,
+  setActive,
+  setContacts,
+  contacts,
+}: Props) => {
   const { data: session } = useSession();
-  const [uid, setUid] = useState<string>("");
-  const [alias, setAlias] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+  const [showPictures, setShowPictures] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<string>("");
 
-  const [message, setMessage] = useState<string>("");
-
-  const submit = async () => {
-    await addDevice();
-    setUid("");
-    setAlias("");
+  const resetStates = () => {
+    setName("");
+    setEmail("");
+    setPhone("");
+    setSelectedImage("");
+    setShowPictures(false);
   };
 
-  const addDevice = async () => {
-    if (web3 && contract && session?.user?.email) {
-      const email = session?.user?.email;
-      await axios
-        .post(
-          "/api/addDevice",
-          {
-            email,
-            uid,
-            alias,
+  const addContact = async (event: MouseEvent<HTMLButtonElement>) => {
+    let button = event.currentTarget;
+    button.disabled = true;
+    let userEmail = session?.user?.email;
+
+    try {
+      const response = await axios.post(
+        "/api/createContact",
+        {
+          name,
+          contactEmail: email,
+          phoneNumber: phone,
+          avatar: selectedImage,
+          userEmail,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then(function (response) {
-          showToastMessage(response.data.msg, "success");
-          //setModal(false);
-        })
-        .catch(function (error) {
-          showToastMessage(error.response?.data?.error, "error");
-          //setModal(false);
-        });
+        }
+      );
+      setContacts([...contacts, response.data.msg as contact]);
+      showToastMessage("Contact created succesfully", "success");
+    } catch (error: any) {
+      console.log(error.response?.data?.error);
+
+      showToastMessage(error.response?.data?.error, "error");
+      setActive((prev) => !prev);
+      button.disabled = false;
     }
+
+    setActive((prev) => !prev);
+    button.disabled = false;
+    resetStates();
   };
 
   return (
@@ -73,13 +98,13 @@ const AddContactModal = ({ active, setActive }: Props) => {
               type="text"
               placeholder="John Doe"
               className="input input-bordered w-full bg-sky-500 placeholder:text-stone-300"
-              minLength={3}
+              minLength={2}
               maxLength={50}
               required
               onChange={(e) => {
-                setAlias(e.target.value);
+                setName(e.target.value);
               }}
-              value={alias}
+              value={name}
             />
           </label>
           <label className="label">
@@ -93,15 +118,15 @@ const AddContactModal = ({ active, setActive }: Props) => {
             </span>
             <input
               type="text"
-              minLength={8}
-              maxLength={16}
+              minLength={5}
+              maxLength={254}
               required
               placeholder="whatever@gmail.com"
               className="input input-bordered w-full bg-sky-500 placeholder:text-stone-300"
               onChange={(e) => {
-                setUid(e.target.value);
+                setEmail(e.target.value);
               }}
-              value={uid}
+              value={email}
             />
           </label>
           <label className="label">
@@ -114,45 +139,82 @@ const AddContactModal = ({ active, setActive }: Props) => {
             <input
               type="tel"
               minLength={10}
-              maxLength={10}
+              maxLength={15}
               required
               placeholder="..."
               className="input input-bordered w-full bg-sky-500 placeholder:text-stone-300"
               onChange={(e) => {
-                setUid(e.target.value);
+                setPhone(e.target.value);
               }}
-              value={uid}
+              value={phone}
             />
           </label>
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text text-gray-600">Your message</span>
-            </label>
-            <textarea
-              className="textarea textarea-bordered h-24 bg-sky-500 placeholder:text-stone-300"
-              maxLength={maximumMessageLength}
-              placeholder="Hey Mr/Mrs..."
-              value={message}
-              onChange={(e) => {
-                setMessage(e.target.value);
-              }}
-            ></textarea>
-            <label className="label">
-              <span className="label-text-alt">Characters</span>
-              <span className="label-text-alt">{`${message.length}/${maximumMessageLength}`}</span>
-            </label>
-          </div>
         </div>
+        <label className="label">
+          <button
+            className="btn text-center w-full btn-link text-gray-600"
+            onClick={() => setShowPictures((prev) => !prev)}
+          >
+            Choose an avatar for the contact
+          </button>
+        </label>
+        {showPictures && (
+          <div className="grid grid-cols-2  ">
+            <Image
+              src={avatarw1}
+              alt="Avatar"
+              className={`w-full h-full object-cover ${
+                selectedImage === "avatarw1"
+                  ? "border-red-600 border-4"
+                  : "border-black border-2"
+              } border-2 border-solid`}
+              onClick={() => setSelectedImage("avatarw1")}
+            />
+            <Image
+              src={avatarw2}
+              alt="Avatar"
+              className={`w-full h-full object-cover ${
+                selectedImage === "avatarw2"
+                  ? "border-red-600 border-4"
+                  : "border-black border-2"
+              }  border-solid`}
+              onClick={() => setSelectedImage("avatarw2")}
+            />
+            <Image
+              src={avatarm1}
+              alt="Avatar"
+              className={`w-full h-full object-cover ${
+                selectedImage === "avatarm1"
+                  ? "border-red-600 border-4"
+                  : "border-black border-2"
+              } border-2 border-solid`}
+              onClick={() => setSelectedImage("avatarm1")}
+            />
+            <Image
+              src={avatarm2}
+              alt="Avatar"
+              className={`w-full h-full object-cover ${
+                selectedImage === "avatarm2"
+                  ? "border-red-600 border-4"
+                  : "border-black border-2"
+              } border-2 border-solid`}
+              onClick={() => setSelectedImage("avatarm2")}
+            />
+          </div>
+        )}
         <div className="flex justify-between items-center">
           <div className="modal-action ml-auto">
             <button
-              onClick={() => setActive((prev) => !prev)}
+              onClick={() => {
+                setActive((prev) => !prev);
+                resetStates();
+              }}
               className="btn btn-ghost"
             >
               Cancel
             </button>
-            <button onClick={submit} className="btn btn-info text-white">
-              Submit
+            <button onClick={addContact} className="btn btn-info text-white">
+              Create
             </button>
           </div>
         </div>

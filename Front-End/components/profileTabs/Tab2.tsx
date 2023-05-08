@@ -1,44 +1,104 @@
 import Image from "next/image";
-import avatarw1 from "../../public/images/avatarw1.png";
 import avatarm1 from "../../public/images/avatarm1.png";
 import avatarm2 from "../../public/images/avatarm2.png";
-import { useState } from "react";
+import avatarw1 from "../../public/images/avatarw1.png";
+import avatarw2 from "../../public/images/avatarw2.png";
+import { useState, useRef, useEffect } from "react";
 import { StaticImageData } from "next/image";
 import AddContactModal from "../AddContactModal";
+import SendMessageModal from "../SendMessageModal";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { contact } from "../../types/fullstack";
 
-type Contact = {
-  name: string;
-  email: string;
-  phoneNumber: string;
-  avatar?: StaticImageData;
+// const contacts: Contact[] = [
+//   {
+//     name: "John Doe",
+//     email: "mail1@yahoo.com",
+//     phoneNumber: "1234567890",
+//     avatar: avatarm1,
+//   },
+//   {
+//     name: "Jane Doe",
+//     email: "mail2@yahoo.com",
+//     phoneNumber: "1234567890",
+//     avatar: avatarw1,
+//   },
+//   {
+//     name: "John Smith",
+//     email: "mail3@yahoo.com",
+//     phoneNumber: "1234567890",
+//     avatar: avatarm2,
+//   },
+//   {
+//     name: "Jane Smith",
+//     email: "mail4@yahoo.com",
+//     phoneNumber: "1234567890",
+//     avatar: avatarw2,
+//   },
+// ];
+
+const avatarMap: { [key: string]: StaticImageData } = {
+  avatarm1,
+  avatarm2,
+  avatarw1,
+  avatarw2,
 };
-
-const contacts: Contact[] = [
-  {
-    name: "John Doe",
-    email: "mail1@yahoo.com",
-    phoneNumber: "1234567890",
-    avatar: avatarm1,
-  },
-  {
-    name: "Jane Doe",
-    email: "mail2@yahoo.com",
-    phoneNumber: "1234567890",
-    avatar: avatarw1,
-  },
-  {
-    name: "John Smith",
-    email: "mail3@yahoo.com",
-    phoneNumber: "1234567890",
-    avatar: avatarm2,
-  },
-];
 
 const Tab2 = () => {
   const [contactModal, setContactModal] = useState<boolean>(false);
+  const [messageModal, setMessageModal] = useState<boolean>(false);
+  const [contacts, setContacts] = useState<contact[]>([]);
+  const { data: session } = useSession();
+  let contactEmail = useRef("");
+
+  const sendMessageHandler = async (email: string) => {
+    contactEmail.current = email;
+    setMessageModal((prev) => !prev);
+  };
+
+  const getAllContacts = async () => {
+    let email = session?.user?.email;
+    try {
+      const response = await axios.get("/api/getContacts", {
+        params: {
+          email,
+        },
+      });
+      setContacts(response.data.msg as contact[]);
+    } catch (error: any) {
+      console.log(error.response?.data?.error);
+    }
+  };
+
+  useEffect(() => {
+    if (!session?.user?.email || contacts.length) return;
+
+    const getAllContactsHandler = async () => {
+      await getAllContacts();
+    };
+    getAllContactsHandler();
+  }, []);
+
   return (
     <>
-      <AddContactModal active={contactModal} setActive={setContactModal} />
+      <AddContactModal
+        active={contactModal}
+        setActive={setContactModal}
+        setContacts={setContacts}
+        contacts={contacts}
+      />
+      <SendMessageModal
+        active={messageModal}
+        setActive={setMessageModal}
+        contactEmail={contactEmail.current}
+      />
+      <button
+        className="btn bg-cyan-200 text-black border-none hover:bg-primary hover:text-white transition-colors duration-200 ease-in"
+        onClick={() => setContactModal((prev) => !prev)}
+      >
+        Add a new contact
+      </button>
       {contacts.length ? (
         <div className="grid grid-cols-2 gap-2">
           {contacts.map((contact, idx) => (
@@ -46,10 +106,10 @@ const Tab2 = () => {
               key={idx}
               className="card lg:card-side glass shadow-xl max-w-lg"
             >
-              <figure>
+              <figure className="w-[50%]">
                 <Image
                   className="h-full"
-                  src={contact.avatar || avatarw1}
+                  src={avatarMap[contact.avatar] as StaticImageData}
                   alt="Album"
                 />
               </figure>
@@ -58,8 +118,8 @@ const Tab2 = () => {
                 <p>Phone Number: {contact.phoneNumber}</p>
                 <div className="card-actions justify-center">
                   <button
-                    onClick={() => setContactModal((prev) => !prev)}
                     className="btn btn-primary"
+                    onClick={() => sendMessageHandler(contact.email)}
                   >
                     Email Alert
                   </button>

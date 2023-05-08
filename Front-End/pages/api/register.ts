@@ -6,11 +6,7 @@ import bcrypt from "bcrypt";
 import Account from "../../model/Device";
 import { web3, contract } from "../../exports/web3";
 import { log } from "console";
-
-export interface ResponseData {
-  error?: string;
-  msg?: string;
-}
+import { ResponseData } from "../../types/fullstack";
 
 export const validateEmail = (email: string): boolean => {
   const regEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;

@@ -2,8 +2,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { log } from "console";
 import User from "../../model/User";
-import { contract } from "../../exports/web3";
-import { ResponseData } from "../../types/fullstack";
+import Contact from "../../model/Contact";
+import { contact } from "../../types/fullstack";
+
+type ResponseData = {
+  msg?: contact[];
+  error?: string;
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,18 +21,27 @@ export default async function handler(
   }
   const { email } = req.query;
   if (!email) return res.status(400).json({ error: "Email is empty" });
-  let devices;
+
+  let contacts;
+
   const user = await User.findOne({ email: email });
+
   if (!user) return res.status(400).json({ error: "User not found" });
   try {
-    const publicKey = user.publicKey;
-    devices = await contract.methods
-      .getDeviceIDsByUser(publicKey)
-      .call({ from: publicKey });
+    contacts = await Contact.find({ userId: user._id });
   } catch (err: any) {
     log(err);
-    return res.status(400).json({ error: "Error while fetching devices" });
+    return res.status(400).json({ error: "Error while fetching contacts" });
   }
 
-  res.status(200).json({ msg: devices });
+  let contactsToSend: contact[] = contacts.map((contact) => {
+    return {
+      name: contact.name,
+      email: contact.email,
+      phoneNumber: contact.phoneNumber,
+      avatar: contact.avatar,
+    };
+  });
+
+  res.status(200).json({ msg: contactsToSend });
 }
