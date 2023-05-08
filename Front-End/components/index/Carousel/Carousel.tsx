@@ -42,20 +42,39 @@ const Carousel = () => {
                 index === current
                   ? "pointer-events-auto opacity-100 scale-100"
                   : "pointer-events-none opacity-0 scale-75"
-              } flex absolute w-full h-full overflow-hidden rounded-3xl 
+              } grid grid-cols-2 absolute w-full h-full overflow-hidden rounded-3xl 
                 transition-all duration-500 ease-in-out shadow-md`}
             >
-              <div className="w-100 h-100">
+              <div className="col-span-1 relative">
                 <Image
-                  className="w-full object-cover"
+                  className="object-cover"
                   src={image.image}
                   fill={true}
                   loading="eager"
                   alt=""
                 />
+                <div className="absolute inset-0 bg-black bg-opacity-50 w-full h-full"></div>
               </div>
-              <div className="absolute w-full h-full flex items-end p-10 px-8 bg-black bg-opacity-50">
-                <h2 className="text-white text-2xl">{image.title}</h2>
+              <div className="w-full h-full glass p-3 overflow-y-auto">
+                <ul className="p-2 w-full flex flex-col items-start gap-y-2 justify-center overflow-auto h-full bg-blue-600 bg-opacity-50 rounded-2xl">
+                  {image.list.map((item, index) => {
+                    return (
+                      <li
+                        key={index}
+                        className="font_size-clamp text-white text-xl"
+                      >
+                        <h2 className="m-0 first-letter:font-bold first-letter:underline">
+                          {item}
+                        </h2>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+              <div className="absolute w-full h-full flex items-end p-10 px-8 ">
+                <h2 className="text-white text-2xl">
+                  Save water in the {image.title}
+                </h2>
               </div>
             </div>
           );

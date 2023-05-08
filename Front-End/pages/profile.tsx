@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { DeviceStats } from "../types/orbitDB";
 import Tab1 from "../components/profileTabs/Tab1";
 import withAuth from "../components/withAuth";
+import Tab2 from "../components/profileTabs/Tab2";
 
 const Profile: NextPage = () => {
   const [devices, setDevices] = useState<DeviceStats>({});
@@ -38,14 +39,14 @@ const Profile: NextPage = () => {
           className={`tab ${activeTab === 1 && "tab-active"}`}
           onClick={() => setActiveTab(1)}
         >
-          Tab 1
+          {`Devices (${Object.keys(devices).length})`}
         </div>
         <div
           id="_tab2"
           className={`tab ${activeTab === 2 && "tab-active"}`}
           onClick={() => setActiveTab(2)}
         >
-          Tab 2
+          Contacts
         </div>
         <div
           id="_tab3"
@@ -55,7 +56,13 @@ const Profile: NextPage = () => {
           Tab 3
         </div>
       </div>
-      {activeTab === 1 && <Tab1 devices={devices} />}
+      {activeTab === 1 ? (
+        <Tab1 devices={devices} />
+      ) : activeTab === 2 ? (
+        <Tab2 />
+      ) : (
+        <div>Tab 3</div>
+      )}
     </div>
   );
 };

@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
 import { useSession, signOut } from "next-auth/react";
 import Background from "../components/Background";
-import Modal from "../components/Modal";
+import Modal from "../components/AddDeviceModal";
 import ExchangeRates from "../components/index/ExchangeRates";
 import withAuth from "../components/withAuth";
-import InfoCarousel from "../components/index/InfoCarousel";
 import Card from "../components/Card";
 import Carousel from "../components/index/Carousel/Carousel";
 
@@ -14,10 +13,8 @@ const Home: NextPage = () => {
   if (session) {
     return (
       <div className="flex justify-center items-center ">
-        <Modal email={session?.user?.email ?? ""} />
         <div className="grid gap-y-10 mt-10 p-6 justify-center max-w-[80%] glass rounded-xl">
           <Carousel />
-          <InfoCarousel />
           <div className="grid grid-cols-5 divide-x-2 border-double border-8 rounded-xl">
             <Card
               title="Increased water scarcity"

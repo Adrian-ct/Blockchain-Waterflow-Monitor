@@ -6,6 +6,7 @@ import { RecoilRoot } from "recoil";
 import Background from "../components/Background";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Modal from "../components/AddDeviceModal";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
@@ -24,6 +25,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
       />
       <RecoilRoot>
         <SessionProvider session={session}>
+          <Modal />
           <Background>
             <NavBar />
             <Component {...pageProps} />

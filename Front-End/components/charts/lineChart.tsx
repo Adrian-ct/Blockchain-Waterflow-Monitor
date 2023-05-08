@@ -34,7 +34,7 @@ const LineChart = ({ width, height, room, labels, data }: Props) => {
           "rgba(75,192,192,1)",
           "#ecf0f1",
           "#50AF95",
-          "#f3ba2f",
+          "#00ff9d",
           "#2a71d0",
           "yellow",
           "red",

@@ -56,7 +56,7 @@ export default async function handler(
             eventDate.getFullYear() === currentDate.getFullYear() &&
             eventDate.getMonth() === currentDate.getMonth() &&
             eventDate.getDate() === currentDate.getDate() &&
-            eventDate.getHours() === currentDate.getHours() - 1
+            eventDate.getHours() === currentDate.getHours()
           );
         })
         .map((e: any) => {

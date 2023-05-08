@@ -3,15 +3,11 @@ import { modalAtom } from "../atoms/atom";
 import { useState } from "react";
 import { web3, contract } from "../exports/web3";
 import axios from "axios";
-import { TransactionReceipt } from "web3-core";
-import { log } from "console";
 import showToastMessage from "../utils/showToastMessage";
+import { useSession } from "next-auth/react";
 
-type Props = {
-  email: string;
-};
-
-const Modal = ({ email }: Props) => {
+const Modal = () => {
+  const { data: session } = useSession();
   const [uid, setUid] = useState<string>("");
   const [alias, setAlias] = useState<string>("");
   const [modal, setModal] = useRecoilState(modalAtom);
@@ -23,7 +19,8 @@ const Modal = ({ email }: Props) => {
   };
 
   const addDevice = async () => {
-    if (web3 && contract && email) {
+    if (web3 && contract && session?.user?.email) {
+      const email = session?.user?.email;
       await axios
         .post(
           "/api/addDevice",
@@ -51,21 +48,25 @@ const Modal = ({ email }: Props) => {
   };
 
   return (
-    <div className={`modal  ${modal ? "modal-open" : ""}`}>
+    <div className={`modal ${modal ? "modal-open" : ""}`}>
       <div className="modal-box bg-white">
-        <h3 className="font-bold text-lg text-center">
+        <h3 className="font-bold text-lg text-center text-blue-600">
           Add the details necessary to add a new device
         </h3>
         <div className="form-control text-white">
           <label className="label">
-            <span className="label-text">An alias for easier reading</span>
+            <span className="label-text text-gray-600">
+              An alias for easier reading
+            </span>
           </label>
           <label className="input-group">
-            <span>Alias</span>
+            <span className="bg-white w-20 border-blue-300 shadow-lg border-solid border-2 text-black font-bold">
+              Alias
+            </span>
             <input
               type="text"
               placeholder="Bathroom"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-sky-500"
               minLength={3}
               maxLength={50}
               required
@@ -76,19 +77,21 @@ const Modal = ({ email }: Props) => {
             />
           </label>
           <label className="label">
-            <span className="label-text">
+            <span className="label-text text-gray-600">
               Device&apos;s Unique ID (Can be found on the back)
             </span>
           </label>
           <label className="input-group">
-            <span>UID</span>
+            <span className="bg-white w-20 border-blue-300 shadow-lg border-solid border-2 text-black font-bold">
+              UID
+            </span>
             <input
               type="password"
               minLength={8}
               maxLength={16}
               required
               placeholder="********"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full bg-sky-500"
               onChange={(e) => {
                 setUid(e.target.value);
               }}
@@ -100,11 +103,11 @@ const Modal = ({ email }: Props) => {
           <div className="modal-action ml-auto">
             <button
               onClick={() => setModal((old) => !old)}
-              className="btn btn-ghost"
+              className="btn btn-ghost text-black"
             >
               Cancel
             </button>
-            <button onClick={submit} className="btn btn-accent">
+            <button onClick={submit} className="btn btn-info text-white">
               Submit
             </button>
           </div>

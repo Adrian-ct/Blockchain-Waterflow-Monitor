@@ -5,7 +5,7 @@ import Avatar from "../images/man.png";
 import { signOut, useSession } from "next-auth/react";
 import { modalAtom } from "../atoms/atom";
 import { useRecoilState } from "recoil";
-import Modal from "./Modal";
+import Modal from "./AddDeviceModal";
 
 const NavBar = () => {
   const [modal, setModal] = useRecoilState(modalAtom);
@@ -69,7 +69,7 @@ const NavBar = () => {
                 </a>
               </li>
             </ul>
-            <Modal email={session?.user?.email ?? ""} />
+            <Modal />
           </div>
         </div>
       ) : (

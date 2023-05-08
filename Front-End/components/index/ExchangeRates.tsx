@@ -37,7 +37,7 @@ const ExchangeRates = () => {
     getExchangeRate();
   }, []);
   return (
-    <div className="flex flex-col glass p-10 rounded-xl">
+    <div className="flex flex-col bg-gradient-to-tl from-blue-600 to-white p-10 rounded-xl">
       <div className="grid">
         <div className="chat chat-start">
           <div className="chat-image avatar">

@@ -43,3 +43,11 @@
   border-width: 2.5px;
   border-style: dashed;
 }
+
+.font_size-clamp {
+  font-size: clamp(1rem, 30%, 2rem);
+}
+
+.list-dots {
+  list-style-type: square;
+}

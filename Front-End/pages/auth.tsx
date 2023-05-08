@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { Field, Form, Formik } from "formik";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import showToastMessage from "../utils/showToastMessage";
 interface IDivicerProps {
   word?: string;
 }
@@ -35,7 +35,6 @@ const Auth: NextPage = ({ providers }: any) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
   //Hide/Show password
   const [showPassword, setShowPassword] = useState(false);
@@ -58,7 +57,7 @@ const Auth: NextPage = ({ providers }: any) => {
       password: password,
       callbackUrl: `${window.location.origin}`,
     });
-    res.error ? console.log(res.error) : redirectToHome();
+    res.error ? showToastMessage(res.error, "error") : redirectToHome();
   };
 
   const formSubmit = (actions: any) => {
@@ -84,7 +83,7 @@ const Auth: NextPage = ({ providers }: any) => {
         redirectToHome();
       })
       .catch((error) => {
-        setError(error.err);
+        showToastMessage(error.message, "error");
       });
     console.log(res);
   };
@@ -171,9 +170,6 @@ const Auth: NextPage = ({ providers }: any) => {
                   >
                     {authType}
                   </button>
-                  {error && (
-                    <h1 className="text-xl text-error mt-6">{error}</h1>
-                  )}
                 </div>
               </Form>
             )}

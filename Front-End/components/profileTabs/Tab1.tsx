@@ -142,7 +142,10 @@ const Tab1 = ({ devices }: Props) => {
     <>
       <div className="flex justify-between sm:w-6/12 lg:w-2/5">
         <div className="dropdown dropdown-left">
-          <label tabIndex={0} className="btn m-1 btn-warning">
+          <label
+            tabIndex={0}
+            className="btn m-1 btn-warning hover:btn-success hover:text-white transition-colors duration-300 "
+          >
             Filters
           </label>
           <ul
@@ -182,7 +185,10 @@ const Tab1 = ({ devices }: Props) => {
           </ul>
         </div>
         <div className="dropdown dropdown-right">
-          <label tabIndex={0} className="btn m-1 btn-warning">
+          <label
+            tabIndex={0}
+            className="btn m-1 btn-warning hover:btn-success hover:text-white transition-colors duration-300"
+          >
             Sort
           </label>
           <ul
@@ -204,15 +210,21 @@ const Tab1 = ({ devices }: Props) => {
           </ul>
         </div>
       </div>
-      {Object.keys(filteredDevices).map((deviceId: string, idx) => {
-        return (
-          <Item
-            deviceID={deviceId}
-            deviceData={filteredDevices[parseInt(deviceId)] as AliasStats}
-            key={idx as number}
-          />
-        );
-      })}
+      {Object.keys(filteredDevices).length ? (
+        Object.keys(filteredDevices).map((deviceId: string, idx) => {
+          return (
+            <Item
+              deviceID={deviceId}
+              deviceData={filteredDevices[parseInt(deviceId)] as AliasStats}
+              key={idx as number}
+            />
+          );
+        })
+      ) : (
+        <h1 className="text-xl text-white bg-slate-700 p-3 rounded-xl">
+          Looks like you didn&apos;t add any devices yet :(
+        </h1>
+      )}
     </>
   );
 };
