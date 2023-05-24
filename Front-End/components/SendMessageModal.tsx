@@ -17,43 +17,41 @@ const SendMessageModal = ({ active, setActive, contactEmail }: Props) => {
   const [subject, setSubject] = useState<string>("");
   const [message, setMessage] = useState<string>("");
 
-  const submit = async () => {
-    // await addDevice();
-    // setUid("");
-    // setAlias("");
+  const resetStates = () => {
+    setSubject("");
+    setMessage("");
   };
 
   const addContact = async (event: MouseEvent<HTMLButtonElement>) => {
-    showToastMessage("This feature is not available yet", "error");
-    //setActive((prev) => !prev);
-    //event.currentTarget.disabled = true;
+    let button = event.currentTarget;
+    button.disabled = true;
+    let userEmail = session?.user?.email;
 
-    // if (web3 && contract && session?.user?.email) {
-    //   const email = session?.user?.email;
-    //   await axios
-    //     .post(
-    //       "/api/addDevice",
-    //       {
-    //         email,
-    //         uid,
-    //         alias,
-    //       },
-    //       {
-    //         headers: {
-    //           Accept: "application/json",
-    //           "Content-Type": "application/json",
-    //         },
-    //       }
-    //     )
-    //     .then(function (response) {
-    //       showToastMessage(response.data.msg, "success");
-    //       //setModal(false);
-    //     })
-    //     .catch(function (error) {
-    //       showToastMessage(error.response?.data?.error, "error");
-    //       //setModal(false);
-    //     });
-    // }
+    try {
+      const response = await axios.post(
+        "/api/sendMessage",
+        {
+          subject,
+          message,
+          contactEmail,
+          userEmail,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      showToastMessage(response.data.msg as string, "success");
+    } catch (error: any) {
+      console.log(error.response?.data?.error);
+      showToastMessage(error.response?.data?.error, "error");
+    }
+
+    setActive((prev) => !prev);
+    button.disabled = false;
+    //resetStates();
   };
 
   return (
@@ -98,11 +96,10 @@ const SendMessageModal = ({ active, setActive, contactEmail }: Props) => {
             <input
               type="text"
               placeholder="....@gmail.com"
-              className="input input-bordered w-full bg-sky-500 placeholder:text-stone-300"
+              className="input input-bordered w-full bg-gray-400 placeholder:text-stone-300"
               minLength={3}
               maxLength={50}
-              required
-              contentEditable={false}
+              readOnly={true}
               defaultValue={contactEmail}
             />
           </label>

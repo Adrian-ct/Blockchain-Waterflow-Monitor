@@ -48,13 +48,6 @@ const Profile: NextPage = () => {
         >
           Contacts
         </div>
-        <div
-          id="_tab3"
-          className={`tab ${activeTab === 3 && "tab-active"}`}
-          onClick={() => setActiveTab(3)}
-        >
-          Tab 3
-        </div>
       </div>
       {activeTab === 1 ? (
         <Tab1 devices={devices} />

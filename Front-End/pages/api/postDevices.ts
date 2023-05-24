@@ -1,8 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { log } from "console";
-import { ResponseData } from "./register";
 import getDb from "../../exports/orbitDB";
+import { ResponseData } from "../../types/fullstack";
 
 export default async function handler(
   req: NextApiRequest,

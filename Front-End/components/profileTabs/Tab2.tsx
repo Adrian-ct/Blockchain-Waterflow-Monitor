@@ -10,33 +10,7 @@ import SendMessageModal from "../SendMessageModal";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { contact } from "../../types/fullstack";
-
-// const contacts: Contact[] = [
-//   {
-//     name: "John Doe",
-//     email: "mail1@yahoo.com",
-//     phoneNumber: "1234567890",
-//     avatar: avatarm1,
-//   },
-//   {
-//     name: "Jane Doe",
-//     email: "mail2@yahoo.com",
-//     phoneNumber: "1234567890",
-//     avatar: avatarw1,
-//   },
-//   {
-//     name: "John Smith",
-//     email: "mail3@yahoo.com",
-//     phoneNumber: "1234567890",
-//     avatar: avatarm2,
-//   },
-//   {
-//     name: "Jane Smith",
-//     email: "mail4@yahoo.com",
-//     phoneNumber: "1234567890",
-//     avatar: avatarw2,
-//   },
-// ];
+import EmptyPlaceholder from "../EmptyPlaceholder";
 
 const avatarMap: { [key: string]: StaticImageData } = {
   avatarm1,
@@ -94,7 +68,7 @@ const Tab2 = () => {
         contactEmail={contactEmail.current}
       />
       <button
-        className="btn bg-cyan-200 text-black border-none hover:bg-primary hover:text-white transition-colors duration-200 ease-in"
+        className="btn bg-white text-blue-800 font-bold border-none hover:bg-primary hover:text-white transition-colors duration-300 ease-in"
         onClick={() => setContactModal((prev) => !prev)}
       >
         Add a new contact
@@ -129,7 +103,7 @@ const Tab2 = () => {
           ))}
         </div>
       ) : (
-        <div>No contacts</div>
+        <EmptyPlaceholder text="Looks like you don't have any contacts :(" />
       )}
     </>
   );

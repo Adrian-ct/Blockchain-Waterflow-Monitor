@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AliasStats, DeviceStats } from "../../types/orbitDB";
 import Item from "../Item";
+import EmptyPlaceholder from "../EmptyPlaceholder";
 
 type Props = {
   devices: DeviceStats;
@@ -221,9 +222,7 @@ const Tab1 = ({ devices }: Props) => {
           );
         })
       ) : (
-        <h1 className="text-xl text-white bg-slate-700 p-3 rounded-xl">
-          Looks like you didn&apos;t add any devices yet :(
-        </h1>
+        <EmptyPlaceholder text="Looks like you didn't add any devices yet :(" />
       )}
     </>
   );
