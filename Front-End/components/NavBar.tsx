@@ -6,7 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import { modalAtom } from "../atoms/atom";
 import { useRecoilState } from "recoil";
 import Modal from "./AddDeviceModal";
-
+import { AiOutlinePlusCircle } from "react-icons/ai";
 const NavBar = () => {
   const [modal, setModal] = useRecoilState(modalAtom);
   const { data: session } = useSession();
@@ -32,9 +32,12 @@ const NavBar = () => {
             <li>
               <button
                 onClick={() => setModal(true)}
-                className="btn btn-secondary text-white"
+                className="btn btn-secondary text-white group"
               >
-                Add new device
+                <span className="transition group-hover:animate-bounce">
+                  Add new device
+                </span>
+                <AiOutlinePlusCircle className="transition text-green-400 text-2xl group-hover:animate-spin" />
               </button>
             </li>
             <li className="hover:bg-blue-400 hover:text-white transition-colors ease-linear duration-75 rounded-xl font-bold text-blue-600">

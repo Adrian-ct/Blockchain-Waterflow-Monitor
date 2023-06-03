@@ -44,6 +44,7 @@ const SendMessageModal = ({ active, setActive, contactEmail }: Props) => {
         }
       );
       showToastMessage(response.data.msg as string, "success");
+      resetStates();
     } catch (error: any) {
       console.log(error.response?.data?.error);
       showToastMessage(error.response?.data?.error, "error");

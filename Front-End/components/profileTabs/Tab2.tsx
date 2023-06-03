@@ -11,6 +11,12 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { contact } from "../../types/fullstack";
 import EmptyPlaceholder from "../EmptyPlaceholder";
+import { FiEdit } from "react-icons/fi";
+import { RiDeleteBin5Line, RiMailSendLine } from "react-icons/ri";
+import ConfirmationModal from "../ConfirmationModal";
+import { set } from "mongoose";
+import showToastMessage from "../../utils/showToastMessage";
+import MaintainContactModal from "../MaintainContactModal";
 
 const avatarMap: { [key: string]: StaticImageData } = {
   avatarm1,
@@ -19,15 +25,30 @@ const avatarMap: { [key: string]: StaticImageData } = {
   avatarw2,
 };
 
+type contactRef = {
+  email: string;
+  type: "create" | "update";
+};
+
 const Tab2 = () => {
+  //Modals
   const [contactModal, setContactModal] = useState<boolean>(false);
   const [messageModal, setMessageModal] = useState<boolean>(false);
+  const [deleteContactModal, setDeleteContactModal] = useState<boolean>(false);
+
+  //States
   const [contacts, setContacts] = useState<contact[]>([]);
+
+  //Session
   const { data: session } = useSession();
-  let contactEmail = useRef("");
+
+  let contactEmail = useRef<contactRef>({
+    email: "",
+    type: "create",
+  });
 
   const sendMessageHandler = async (email: string) => {
-    contactEmail.current = email;
+    contactEmail.current.email = email;
     setMessageModal((prev) => !prev);
   };
 
@@ -45,6 +66,23 @@ const Tab2 = () => {
     }
   };
 
+  const deleteContactHandler = async () => {
+    try {
+      const response = await axios.delete("/api/removeContact", {
+        params: {
+          contactEmail: contactEmail.current.email,
+        },
+      });
+      setContacts((prev) =>
+        prev.filter((contact) => contact.email !== contactEmail.current.email)
+      );
+      showToastMessage(response.data.msg as string, "success");
+    } catch (error: any) {
+      showToastMessage(error.response?.data?.error, "error");
+    }
+    setDeleteContactModal((prev) => !prev);
+  };
+
   useEffect(() => {
     if (!session?.user?.email || contacts.length) return;
 
@@ -56,20 +94,40 @@ const Tab2 = () => {
 
   return (
     <>
-      <AddContactModal
+      <ConfirmationModal
+        setActive={setDeleteContactModal}
+        active={deleteContactModal}
+        confirmation={deleteContactHandler}
+      />
+      {/* <AddContactModal
         active={contactModal}
         setActive={setContactModal}
         setContacts={setContacts}
         contacts={contacts}
+      /> */}
+      <MaintainContactModal
+        active={contactModal}
+        setActive={setContactModal}
+        setContacts={setContacts}
+        contacts={contacts}
+        action={contactEmail.current.type}
+        contactEmail={
+          contactEmail.current.type === "update"
+            ? contactEmail.current.email
+            : undefined
+        }
       />
       <SendMessageModal
         active={messageModal}
         setActive={setMessageModal}
-        contactEmail={contactEmail.current}
+        contactEmail={contactEmail.current.email}
       />
       <button
         className="btn bg-white text-blue-800 font-bold border-none hover:bg-primary hover:text-white transition-colors duration-300 ease-in"
-        onClick={() => setContactModal((prev) => !prev)}
+        onClick={() => {
+          contactEmail.current.type = "create";
+          setContactModal((prev) => !prev);
+        }}
       >
         Add a new contact
       </button>
@@ -90,12 +148,31 @@ const Tab2 = () => {
               <div className="card-body w-full text-white">
                 <h2 className="card-title">{contact.name}</h2>
                 <p>Phone Number: {contact.phoneNumber}</p>
-                <div className="card-actions justify-center">
+                <div className="card-actions justify-center gap-4 mt-4">
+                  <button
+                    className="btn btn-error text-white"
+                    onClick={() => {
+                      contactEmail.current.email = contact.email;
+                      setDeleteContactModal((prev) => !prev);
+                    }}
+                  >
+                    <RiDeleteBin5Line className="w-5 h-auto" />
+                  </button>
                   <button
                     className="btn btn-primary"
                     onClick={() => sendMessageHandler(contact.email)}
                   >
-                    Email Alert
+                    <RiMailSendLine className="w-5 h-auto" />
+                  </button>
+                  <button
+                    className="btn btn-accent"
+                    onClick={() => {
+                      contactEmail.current.type = "update";
+                      contactEmail.current.email = contact.email;
+                      setContactModal((prev) => !prev);
+                    }}
+                  >
+                    <FiEdit className="w-5 h-auto" />
                   </button>
                 </div>
               </div>
