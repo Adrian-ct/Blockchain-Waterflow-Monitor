@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { AliasStats, DeviceWaterflow, Stats } from "../types/orbitDB";
+import { AliasStats, Stats } from "../types/orbitDB";
 import axios from "axios";
 import { FiEdit, FiCheck, FiX } from "react-icons/fi";
+import showToastMessage from "../utils/showToastMessage";
 
 type Props = {
   deviceData: AliasStats;
@@ -13,7 +14,7 @@ const Item = ({ deviceData, deviceID }: Props) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [alias, setAlias] = useState<string>("");
 
-  const handleToggleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleActiveChange  = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setActive((prev) => !prev);
     try {
       let alias = deviceData?.alias;
@@ -25,9 +26,9 @@ const Item = ({ deviceData, deviceID }: Props) => {
         active,
       });
 
-      console.log("Update successful:", response.data);
+      showToastMessage(response.data, "success");
     } catch (error: any) {
-      console.error("Error updating device:", error.response?.data?.error);
+      showToastMessage(error.response?.data?.error, "error");
       setActive((prev) => !prev);
     }
   };
@@ -48,11 +49,11 @@ const Item = ({ deviceData, deviceID }: Props) => {
         active,
       });
 
-      console.log("Update successful:", response.data);
+      showToastMessage(response.data, "success");
       deviceData.alias = alias;
       setEdit(false);
     } catch (error: any) {
-      console.error("Error updating device:", error.response?.data?.error);
+      showToastMessage(error.response?.data?.error, "error");
     }
   };
 
@@ -119,7 +120,7 @@ const Item = ({ deviceData, deviceID }: Props) => {
             type="checkbox"
             className="toggle toggle-success"
             checked={active}
-            onChange={handleToggleChange}
+            onChange={handleActiveChange }
           />
         </div>
       </div>

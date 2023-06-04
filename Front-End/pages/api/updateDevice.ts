@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { log } from "console";
-import getDb from "../../exports/orbitDB";
 import Device from "../../model/Device";
 import { ResponseData } from "../../types/fullstack";
+import { getSession } from "next-auth/react";
 
 export default async function handler(
   req: NextApiRequest,
@@ -13,6 +13,10 @@ export default async function handler(
       .status(200)
       .json({ error: "This API call only accepts PUT methods" });
   }
+
+  const session = await getSession({ req });
+  if (!session) return res.status(400).json({ error: "User not logged in" });
+
   const { uid, alias, active } = req.body;
   log(uid, alias, active, "uid, alias, active");
 

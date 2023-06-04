@@ -3,8 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../lib/dbConnect";
 import User from "../../model/User";
 import bcrypt from "bcrypt";
-import Account from "../../model/Device";
-import { web3, contract } from "../../exports/web3";
+import { web3 } from "../../exports/web3";
 import { log } from "console";
 import { ResponseData } from "../../types/fullstack";
 
@@ -47,7 +46,7 @@ export default async function handler(
   // validate if it is a POST
   if (req.method !== "POST") {
     return res
-      .status(200)
+      .status(405)
       .json({ error: "This API call only accepts POST methods" });
   }
 
@@ -77,12 +76,11 @@ export default async function handler(
     publicKey: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
   });
 
-  newUser
-    .save()
-    .then(() => {
-      res.status(200).json({ msg: "Successfuly created new User: " + newUser });
-    })
-    .catch((err: string) =>
-      res.status(400).json({ error: "Error on '/api/register': " + err })
-    );
+  try {
+    await newUser.save();
+    res.status(200).json({ msg: "Successfuly created new User: " + newUser });
+  } catch (err) {
+    log("err", err);
+    res.status(500).json({ error: "Error on '/api/register': " + err });
+  }
 }

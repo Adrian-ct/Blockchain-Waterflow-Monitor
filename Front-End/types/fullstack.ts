@@ -9,3 +9,7 @@ export type contact = {
   phoneNumber: string;
   avatar: string;
 };
+
+export type RecurrentStats = {
+  [key: string]: number;
+};

@@ -31,6 +31,7 @@ const MaintainContactModal = ({
   contactEmail,
   action,
 }: Props) => {
+  //States
   const { data: session } = useSession();
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -38,8 +39,10 @@ const MaintainContactModal = ({
   const [showPictures, setShowPictures] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string>("");
 
+  //Refs
   const originalEmail = useRef<string>("");
 
+  //Functions
   const resetStates = () => {
     setName("");
     setEmail("");
@@ -133,7 +136,6 @@ const MaintainContactModal = ({
       );
       showToastMessage("Contact updated successfully", "success");
     } catch (error: any) {
-      console.log(error.response?.data?.error);
       showToastMessage(error.response?.data?.error, "error");
       button.disabled = false;
     }

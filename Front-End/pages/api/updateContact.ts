@@ -3,6 +3,7 @@ import { contact } from "../../types/fullstack";
 import Contact from "../../model/Contact";
 import User from "../../model/User";
 import { log } from "console";
+import { getSession } from "next-auth/react";
 
 type ResponseData = {
   msg?: contact;
@@ -15,9 +16,12 @@ export default async function handler(
 ) {
   if (req.method !== "PUT") {
     return res
-      .status(200)
+      .status(405)
       .json({ error: "This API call only accepts PUT methods" });
   }
+
+  const session = await getSession({ req });
+  if (!session) return res.status(400).json({ error: "User not logged in" });
 
   const { originalEmail } = req.query;
   if (!originalEmail)

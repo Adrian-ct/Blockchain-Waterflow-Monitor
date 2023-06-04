@@ -7,6 +7,7 @@ import { modalAtom } from "../atoms/atom";
 import { useRecoilState } from "recoil";
 import Modal from "./AddDeviceModal";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+
 const NavBar = () => {
   const [modal, setModal] = useRecoilState(modalAtom);
   const { data: session } = useSession();

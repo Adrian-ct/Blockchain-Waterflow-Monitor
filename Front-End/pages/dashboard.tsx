@@ -1,7 +1,6 @@
 import { NextPage } from "next";
 import LineChart from "../components/charts/lineChart";
 import PieChart from "../components/charts/pieChart";
-import Card from "../components/Card";
 import { BarChart } from "../components/charts/barChart";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -10,6 +9,8 @@ import axios from "axios";
 import { WaterflowDataAddedEvent } from "../types/web3";
 import { DeviceStats } from "../types/orbitDB";
 import withAuth from "../components/withAuth";
+
+
 const Dashboard: NextPage = () => {
   const [devices, setDevices] = useState<DeviceStats>({});
   const { data: session } = useSession();

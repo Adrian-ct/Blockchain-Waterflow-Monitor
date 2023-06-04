@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { RecurrentStats } from "../../pages/api/getMonthlyStats";
+import { RecurrentStats } from "../../types/fullstack";
 import axios from "axios";
 
 type Props = {
@@ -34,9 +34,7 @@ const PieChart = ({ email }: Props) => {
 
   async function getMonthlyStats() {
     try {
-      const response = await axios.get("/api/getMonthlyStats", {
-        params: { email },
-      });
+      const response = await axios.get("/api/getMonthlyStats");
       console.log(response.data.result);
       setMonthlyStats(response.data.result);
     } catch (error: any) {

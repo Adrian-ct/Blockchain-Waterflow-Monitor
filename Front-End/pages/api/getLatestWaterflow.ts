@@ -6,7 +6,7 @@ import User from "../../model/User";
 import { getDevices } from "../../utils/contractHelpers";
 import Device from "../../model/Device";
 import { DeviceWaterflow, Stats } from "../../types/orbitDB";
-import { RecurrentStats } from "./getMonthlyStats";
+import { RecurrentStats } from "../../types/fullstack";
 
 type ResponseData = {
   result?: Stats;

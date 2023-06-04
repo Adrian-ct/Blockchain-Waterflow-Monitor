@@ -4,6 +4,7 @@ import { contact } from "../../types/fullstack";
 import Contact from "../../model/Contact";
 import User from "../../model/User";
 import { log } from "console";
+import { getSession } from "next-auth/react";
 
 type ResponseData = {
   msg?: contact;
@@ -19,6 +20,9 @@ export default async function handler(
       .status(200)
       .json({ error: "This API call only accepts POST methods" });
   }
+
+  const session = await getSession({ req });
+  log("session", session);
 
   const { name, contactEmail, phoneNumber, avatar, userEmail } = req.body;
   log("req.body", req.body);

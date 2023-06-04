@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { log } from "console";
-import { ResponseData } from "./register";
+import { ResponseData } from "../../types/fullstack";
 import User from "../../model/User";
 import { contract, web3 } from "../../exports/web3";
 import getDb from "../../exports/orbitDB";

@@ -7,25 +7,16 @@ import showToastMessage from "../utils/showToastMessage";
 import { useSession } from "next-auth/react";
 
 const Modal = () => {
-  const { data: session } = useSession();
   const [uid, setUid] = useState<string>("");
   const [alias, setAlias] = useState<string>("");
   const [modal, setModal] = useRecoilState(modalAtom);
 
-  const submit = async () => {
-    await addDevice();
-    setUid("");
-    setAlias("");
-  };
-
   const addDevice = async () => {
-    if (web3 && contract && session?.user?.email) {
-      const email = session?.user?.email;
+    if (web3 && contract ) {
       await axios
         .post(
           "/api/addDevice",
           {
-            email,
             uid,
             alias,
           },
@@ -39,6 +30,10 @@ const Modal = () => {
         .then(function (response) {
           showToastMessage(response.data.msg, "success");
           setModal(false);
+
+          //Reset states
+          setUid("");
+          setAlias("");
         })
         .catch(function (error) {
           showToastMessage(error.response?.data?.error, "error");
@@ -107,7 +102,10 @@ const Modal = () => {
             >
               Cancel
             </button>
-            <button onClick={submit} className="btn btn-info text-white">
+            <button
+              onClick={async () => await addDevice()}
+              className="btn btn-info text-white"
+            >
               Submit
             </button>
           </div>

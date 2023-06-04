@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, BarElement, Tooltip, Legend } from "chart.js";
-import { RecurrentStats } from "../../pages/api/getMonthlyStats";
+import { RecurrentStats } from "../../types/fullstack";
 import axios from "axios";
 
 type Props = {
@@ -41,9 +41,7 @@ export const BarChart = ({ email }: Props) => {
 
   async function getDailyStats() {
     try {
-      const response = await axios.get("/api/getDailyStats", {
-        params: { email },
-      });
+      const response = await axios.get("/api/getDailyStats");
       console.log(response.data.result);
       setDailyStats(response.data.result);
     } catch (error: any) {

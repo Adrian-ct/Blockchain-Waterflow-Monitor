@@ -1,12 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { log } from "console";
-import { ResponseData } from "./register";
+import { ResponseData } from "../../types/fullstack";
 import User from "../../model/User";
 import { web3, contract } from "../../exports/web3";
-import getDb from "../../exports/orbitDB";
-import { DeviceWaterflow } from "../../types/orbitDB";
 import Device from "../../model/Device";
+import { getSession } from "next-auth/react";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,11 +16,15 @@ export default async function handler(
       .status(200)
       .json({ error: "This API call only accepts POST methods" });
   }
-  const email = req.body.email.trim();
   const uid = req.body.uid.trim();
   const alias = req.body.alias?.trim();
 
-  const user = await User.findOne({ email: email });
+  const session = await getSession({ req });
+  if (!session) return res.status(400).json({ error: "User not logged in" });
+
+  log("session", session);
+
+  const user = await User.findOne({ email: session.user?.email });
 
   if (!user) return res.status(400).json({ error: "User not found" });
 

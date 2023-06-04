@@ -7,7 +7,7 @@ export default async function handler(
 ) {
   if (req.method !== "POST") {
     return res
-      .status(200)
+      .status(405)
       .json({ error: "This API call only accepts POST methods" });
   }
   const { subject, message, contactEmail, userEmail } = req.body;

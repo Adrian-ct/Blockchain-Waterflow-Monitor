@@ -6,7 +6,8 @@ import User from "../../model/User";
 import { getDevices } from "../../utils/contractHelpers";
 import Device from "../../model/Device";
 import { DeviceWaterflow, Stats } from "../../types/orbitDB";
-import { RecurrentStats } from "./getMonthlyStats";
+import { RecurrentStats } from "../../types/fullstack";
+import { getSession } from "next-auth/react";
 
 type ResponseData = {
   result?: RecurrentStats[];
@@ -22,7 +23,11 @@ export default async function handler(
       .status(200)
       .json({ error: "This API call only accepts POST methods" });
   }
-  const { email } = req.query;
+
+  const session = await getSession({ req });
+  if (!session) return res.status(400).json({ error: "User not logged in" });
+
+  const email = session.user?.email;
 
   let devices: string[] = [];
 

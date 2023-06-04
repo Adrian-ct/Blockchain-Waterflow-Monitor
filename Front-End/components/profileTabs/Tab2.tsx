@@ -5,7 +5,6 @@ import avatarw1 from "../../public/images/avatarw1.png";
 import avatarw2 from "../../public/images/avatarw2.png";
 import { useState, useRef, useEffect } from "react";
 import { StaticImageData } from "next/image";
-import AddContactModal from "../AddContactModal";
 import SendMessageModal from "../SendMessageModal";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -14,7 +13,6 @@ import EmptyPlaceholder from "../EmptyPlaceholder";
 import { FiEdit } from "react-icons/fi";
 import { RiDeleteBin5Line, RiMailSendLine } from "react-icons/ri";
 import ConfirmationModal from "../ConfirmationModal";
-import { set } from "mongoose";
 import showToastMessage from "../../utils/showToastMessage";
 import MaintainContactModal from "../MaintainContactModal";
 
@@ -55,11 +53,7 @@ const Tab2 = () => {
   const getAllContacts = async () => {
     let email = session?.user?.email;
     try {
-      const response = await axios.get("/api/getContacts", {
-        params: {
-          email,
-        },
-      });
+      const response = await axios.get("/api/getContacts");
       setContacts(response.data.msg as contact[]);
     } catch (error: any) {
       console.log(error.response?.data?.error);
@@ -99,12 +93,6 @@ const Tab2 = () => {
         active={deleteContactModal}
         confirmation={deleteContactHandler}
       />
-      {/* <AddContactModal
-        active={contactModal}
-        setActive={setContactModal}
-        setContacts={setContacts}
-        contacts={contacts}
-      /> */}
       <MaintainContactModal
         active={contactModal}
         setActive={setContactModal}

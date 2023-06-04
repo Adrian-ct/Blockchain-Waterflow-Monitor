@@ -3,7 +3,7 @@ import axios from "axios";
 import showToastMessage from "../utils/showToastMessage";
 import { useSession } from "next-auth/react";
 
-type SetActive = (value: boolean | ((prevState: boolean) => boolean)) => void;
+type SetActive = React.Dispatch<React.SetStateAction<boolean>>;
 
 type Props = {
   active: boolean;
