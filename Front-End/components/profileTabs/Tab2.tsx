@@ -51,7 +51,6 @@ const Tab2 = () => {
   };
 
   const getAllContacts = async () => {
-    let email = session?.user?.email;
     try {
       const response = await axios.get("/api/getContacts");
       setContacts(response.data.msg as contact[]);

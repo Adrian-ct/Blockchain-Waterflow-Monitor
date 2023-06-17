@@ -106,7 +106,7 @@ const Dashboard: NextPage = () => {
               .toString()
               .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
           });
-          const data = devices[parseInt(deviceId)].stats.map((data) =>
+          const data = devices[+deviceId].stats.map((data) =>
             parseFloat(data.waterflow)
           );
           labels.reverse();

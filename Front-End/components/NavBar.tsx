@@ -16,9 +16,9 @@ const NavBar = () => {
   const renderNavbar = !pagesWithoutNavbar.includes(pathname);
 
   return renderNavbar ? (
-    <div className="navbar fixed z-[100] top-0 left-0 bg-[#44b7ffb0] text-black">
+    <div className="navbar min-h-6 fixed z-[100] top-0 left-0 bg-white bg-opacity-100 border-b-4 border-b-[#00BD9D] text-black">
       <div className="flex-1">
-        <div className="text-xl px-4 inline-flex items-center text-center h-12 hover:bg-[#65656539] hover:border-l-0 rounded-xl font-bold text-blue-600">
+        <div className="text-l px-4 inline-flex items-center text-center rounded-xl font-bold text-blue-600">
           <NextLink href="/">
             <span className="mr-4 text-violet-700 font-extrabold italic">
               Blockchain
@@ -33,20 +33,23 @@ const NavBar = () => {
             <li>
               <button
                 onClick={() => setModal(true)}
-                className="btn btn-secondary text-white group"
+                className="btn py-0 bg-[#00BD9D] border-none hover:bg-[#00BD9D] text-white group"
               >
-                <span className="transition group-hover:animate-bounce">
+                <span className="transition group-hover:animate-bounce text-xs">
                   Add new device
                 </span>
-                <AiOutlinePlusCircle className="transition text-green-400 text-2xl group-hover:animate-spin" />
+                <AiOutlinePlusCircle className="transition text-blue-800 text-xl group-hover:animate-spin" />
               </button>
             </li>
-            <li className="hover:bg-blue-400 hover:text-white transition-colors ease-linear duration-75 rounded-xl font-bold text-blue-600">
+            <li className="hover:bg-blue-600 hover:text-white rounded-xl font-bold text-blue-600">
               <NextLink href="/dashboard">Dashboard</NextLink>
             </li>
           </ul>
           <div className="dropdown dropdown-end ">
-            <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+            <label
+              tabIndex={0}
+              className="btn btn-ghost btn-circle avatar hover:bg-blue-600"
+            >
               <div className="w-10 rounded-full">
                 <Image width={40} height={40} alt="profile" src={Avatar} />
               </div>

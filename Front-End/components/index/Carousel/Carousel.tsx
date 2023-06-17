@@ -56,14 +56,14 @@ const Carousel = () => {
                 <div className="absolute inset-0 bg-black bg-opacity-50 w-full h-full"></div>
               </div>
               <div className="w-full h-full glass p-3 overflow-y-auto">
-                <ul className="p-2 w-full flex flex-col items-start gap-y-2 justify-center overflow-auto h-full bg-blue-600 bg-opacity-50 rounded-2xl">
+                <ul className="p-2 w-full flex flex-col items-start gap-y-2 justify-center overflow-auto h-full bg-emerald-500 border-white border-2 bg-opacity-30 rounded-2xl">
                   {image.list.map((item, index) => {
                     return (
                       <li
                         key={index}
-                        className="font_size-clamp text-white text-xl"
+                        className="font_size-clamp text-white text-[1vw]"
                       >
-                        <h2 className="m-0 first-letter:font-bold first-letter:underline">
+                        <h2 className="m-0 first-letter:font-bold first-letter:text-blue-700">
                           {item}
                         </h2>
                       </li>

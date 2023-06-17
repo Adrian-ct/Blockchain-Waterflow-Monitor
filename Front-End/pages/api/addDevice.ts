@@ -22,11 +22,24 @@ export default async function handler(
   const session = await getSession({ req });
   if (!session) return res.status(400).json({ error: "User not logged in" });
 
-  log("session", session);
-
   const user = await User.findOne({ email: session.user?.email });
 
   if (!user) return res.status(400).json({ error: "User not found" });
+
+  //add the device and alias to mongo db
+  const device = await Device.findOne({ uid: uid });
+  if (!device) {
+    const newDevice = new Device({
+      uid: uid,
+      alias: alias,
+    });
+    await newDevice.save();
+  } else {
+    device.alias = alias;
+    await device.save();
+  }
+
+  //add the device to the blockchain
 
   const privateKeyEncrypted = JSON.parse(user.privateKey);
   const account = web3.eth.accounts.decrypt(
@@ -65,16 +78,6 @@ export default async function handler(
     return res
       .status(400)
       .json({ error: "Error creating transaction:" + err.message });
-  }
-
-  //add the device and alias to mongo db
-  const device = await Device.findOne({ uid: uid });
-  if (!device) {
-    const newDevice = new Device({
-      uid: uid,
-      alias: alias,
-    });
-    await newDevice.save();
   }
 
   res.status(200).json({ msg: "Device added succesfully" });

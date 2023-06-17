@@ -121,7 +121,7 @@ const Auth: NextPage = ({ providers }: any) => {
                         <div className="form-control w-full mb-6">
                           <input
                             type="text"
-                            className="input input-bordered w-full"
+                            className="input input-bordered w-full bg-white text-black"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             placeholder="Username"
@@ -134,7 +134,7 @@ const Auth: NextPage = ({ providers }: any) => {
                     {() => (
                       <div className="form-control w-full max-w-md mb-6">
                         <input
-                          className="input input-bordered w-full max-w-md"
+                          className="input input-bordered w-full max-w-md bg-white text-black"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="Email Address"
@@ -146,14 +146,14 @@ const Auth: NextPage = ({ providers }: any) => {
                     {() => (
                       <div className="form-control w-full max-w-md mb-6">
                         <input
-                          className="input input-bordered w-full max-w-md"
+                          className="input input-bordered w-full max-w-md bg-white text-black"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           type={showPassword ? "text" : "password"}
                           placeholder="Password"
                         />
                         <button
-                          className="btn text-white underline  bg-transparent border-none hover:bg-transparent"
+                          className="btn text-white underline hover:text-amber-400 bg-transparent border-none hover:bg-transparent"
                           onClick={togglePasswordVisibility}
                           type="button"
                         >
@@ -163,7 +163,7 @@ const Auth: NextPage = ({ providers }: any) => {
                     )}
                   </Field>
                   <button
-                    className={`btn bg-blue-600 border-white text-white mt-6 ${
+                    className={`btn bg-blue-600 border-white text-white hover:bg-white hover:border-blue-600 hover:text-blue-600 mt-6 ${
                       props.isSubmitting && "loading"
                     }`}
                     type="submit"

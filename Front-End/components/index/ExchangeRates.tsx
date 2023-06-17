@@ -22,9 +22,9 @@ const ExchangeRates = () => {
       .get("https://api.coinbase.com/v2/exchange-rates?currency=ETH", {})
       .then(function (response) {
         setRate({
-          EUR: response.data.data.rates.EUR,
-          USD: response.data.data.rates.USD,
-          RON: response.data.data.rates.RON,
+          EUR: +response.data.data.rates.EUR,
+          USD: +response.data.data.rates.USD,
+          RON: +response.data.data.rates.RON,
           timestamp: new Date(),
         });
       })
@@ -37,8 +37,8 @@ const ExchangeRates = () => {
     getExchangeRate();
   }, []);
   return (
-    <div className="flex flex-col bg-gradient-to-tl from-blue-600 to-white p-10 rounded-xl">
-      <div className="grid">
+    <div className="flex flex-col border-double border-8 p-3 rounded-xl">
+      <div className="grid bg-gradient-to-b from-[#9aeafa] to-[#2f8bf5] p-5 rounded-xl">
         <div className="chat chat-start">
           <div className="chat-image avatar">
             <div className="w-10 rounded-full">
@@ -100,19 +100,25 @@ const ExchangeRates = () => {
       <div className="stats mt-4 divide-green-800 stats-vertical lg:stats-horizontal shadow bg-white text-black">
         <div className="stat">
           <div className="stat-title opacity-100">USD</div>
-          <div className="stat-value text-lg text-green-600">{rate?.USD}</div>
+          <div className="stat-value text-lg text-green-600">
+            {rate?.USD.toFixed(5)}
+          </div>
           <div className="stat-desc">{rate.timestamp.toLocaleString()}</div>
         </div>
 
         <div className="stat">
           <div className="stat-title opacity-100">RON</div>
-          <div className="stat-value text-lg text-green-600">{rate?.RON}</div>
+          <div className="stat-value text-lg text-green-600">
+            {rate?.RON.toFixed(5)}
+          </div>
           <div className="stat-desc">{rate.timestamp.toLocaleString()}</div>
         </div>
 
         <div className="stat">
           <div className="stat-title opacity-100">EUR</div>
-          <div className="stat-value text-lg text-green-600">{rate?.EUR}</div>
+          <div className="stat-value text-lg text-green-600">
+            {rate?.EUR.toFixed(5)}
+          </div>
           <div className="stat-desc">{rate.timestamp.toLocaleString()}</div>
         </div>
       </div>

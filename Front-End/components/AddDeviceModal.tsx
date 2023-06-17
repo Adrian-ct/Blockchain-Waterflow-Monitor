@@ -12,7 +12,7 @@ const Modal = () => {
   const [modal, setModal] = useRecoilState(modalAtom);
 
   const addDevice = async () => {
-    if (web3 && contract ) {
+    if (web3 && contract) {
       await axios
         .post(
           "/api/addDevice",
@@ -61,7 +61,7 @@ const Modal = () => {
             <input
               type="text"
               placeholder="Bathroom"
-              className="input input-bordered w-full bg-sky-500"
+              className="input input-bordered w-full bg-sky-500 placeholder:text-gray-300"
               minLength={3}
               maxLength={50}
               required
@@ -86,7 +86,7 @@ const Modal = () => {
               maxLength={16}
               required
               placeholder="********"
-              className="input input-bordered w-full bg-sky-500"
+              className="input input-bordered w-full bg-sky-500 placeholder:text-gray-300"
               onChange={(e) => {
                 setUid(e.target.value);
               }}

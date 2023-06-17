@@ -33,17 +33,17 @@ const Profile: NextPage = () => {
 
   return (
     <div className="flex flex-col gap-6 justify-center items-center w-full">
-      <div className="tabs tabs-boxed">
+      <div className="tabs tabs-boxed bg-[#00BD9D] ">
         <div
           id="_tab1"
-          className={`tab ${activeTab === 1 && "tab-active"}`}
+          className={`tab text-white ${activeTab === 1 && "tab-active "}`}
           onClick={() => setActiveTab(1)}
         >
           {`Devices (${Object.keys(devices).length})`}
         </div>
         <div
           id="_tab2"
-          className={`tab ${activeTab === 2 && "tab-active"}`}
+          className={`tab text-white ${activeTab === 2 && "tab-active"}`}
           onClick={() => setActiveTab(2)}
         >
           Contacts

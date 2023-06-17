@@ -28,17 +28,13 @@ export default async function handler(
   if (!session) return res.status(400).json({ error: "User not logged in" });
 
   const email = session.user?.email;
-
-  let devices: string[] = [];
-
   if (!email) return res.status(200).json({ error: "Email is empty" });
 
   const user = await User.findOne({ email: email });
-
   if (!user) return res.status(200).json({ error: "User not found" });
 
+  let devices: string[] = [];
   devices = await getDevices(user.publicKey);
-
   if (!devices)
     return res.status(200).json({ error: "Error while fetching devices" });
   let db = await getDb();
@@ -69,12 +65,17 @@ export default async function handler(
           return { waterflow, timestamp } as Stats;
         });
 
-      let totalWaterflow = latestDataPoints.reduce(
-        (accumulator: number, currentValue: Stats) => {
-          return accumulator + parseFloat(currentValue.waterflow);
-        },
-        0
-      );
+      let totalWaterflow = 0;
+      for (let i = 0; i < latestDataPoints.length; i++) {
+        if (
+          (i < latestDataPoints.length - 1 &&
+            latestDataPoints[i].waterflow >
+              latestDataPoints[i + 1].waterflow) ||
+          i === latestDataPoints.length - 1
+        ) {
+          totalWaterflow += +latestDataPoints[i].waterflow;
+        }
+      }
 
       totalWaterflow = parseFloat(totalWaterflow.toFixed(2));
 
