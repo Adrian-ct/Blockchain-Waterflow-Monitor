@@ -1,4 +1,5 @@
 import NextLink from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Avatar from "../images/man.png";
@@ -7,6 +8,7 @@ import { modalAtom } from "../atoms/atom";
 import { useRecoilState } from "recoil";
 import Modal from "./AddDeviceModal";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import PrivateKeyModal from "./PrivateKeyModal";
 
 const NavBar = () => {
   const [modal, setModal] = useRecoilState(modalAtom);
@@ -15,8 +17,17 @@ const NavBar = () => {
   const pagesWithoutNavbar = ["/auth"];
   const renderNavbar = !pagesWithoutNavbar.includes(pathname);
 
+  //Private key modal
+  const [privateKeyModal, setPrivateKeyModal] = useState<boolean>(false);
+
   return renderNavbar ? (
     <div className="navbar min-h-6 fixed z-[100] top-0 left-0 bg-white bg-opacity-100 border-b-4 border-b-[#00BD9D] text-black">
+      <PrivateKeyModal
+        active={privateKeyModal}
+        setActive={setPrivateKeyModal}
+        privateKey="1234"
+        publicKey="1234"
+      />
       <div className="flex-1">
         <div className="text-l px-4 inline-flex items-center text-center rounded-xl font-bold text-blue-600">
           <NextLink href="/">
@@ -30,6 +41,12 @@ const NavBar = () => {
       {session ? (
         <div className="flex-none">
           <ul className="menu menu-horizontal gap-4 px-1">
+            <li>
+              <button
+                onClick={() => setPrivateKeyModal((prev) => !prev)}
+                className="btn btn-square btn-primary"
+              ></button>
+            </li>
             <li>
               <button
                 onClick={() => setModal(true)}
