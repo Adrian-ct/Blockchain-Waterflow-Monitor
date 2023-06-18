@@ -9,6 +9,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import Modal from "./AddDeviceModal";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import PrivateKeyModal from "./PrivateKeyModal";
+import ethereum from "../public/images/ethereum.png";
 
 const NavBar = () => {
   const [modal, setModal] = useRecoilState(modalAtom);
@@ -39,7 +40,14 @@ const NavBar = () => {
       <div className="flex-1">
         <div className="text-l px-4 inline-flex items-center text-center rounded-xl font-bold text-blue-600">
           <NextLink href="/">
-            <button className="btn btn-ghost hover:bg-blue-600 hover:text-white text-base font-bold">
+            <button className="btn btn-ghost hover:bg-blue-600 hover:text-white text-base font-bold  transition-colors duration-300 ease-in">
+              <Image
+                src={ethereum}
+                alt="ethereum"
+                width={50}
+                height={50}
+                className="rounded-full bg-blend-color-burn"
+              />
               Blockchain Waterflow Monitor
             </button>
           </NextLink>
@@ -59,7 +67,7 @@ const NavBar = () => {
                 <AiOutlinePlusCircle className="transition text-blue-800 text-xl group-hover:animate-spin" />
               </button>
             </li>
-            <li className="hover:bg-blue-600 hover:text-white rounded-xl font-bold text-blue-600">
+            <li className="rounded-xl font-bold text-blue-600  hover:bg-blue-600 hover:text-white">
               <NextLink href="/dashboard">Dashboard</NextLink>
             </li>
           </ul>
