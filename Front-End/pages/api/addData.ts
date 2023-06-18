@@ -47,7 +47,7 @@ export default async function handler(
     }
 
     //check if the device is active
-    const device = await Device.findOne({ deviceID });
+    const device = await Device.findOne({ uid: deviceID });
     if (device.active === false)
       return res.status(400).json({ error: "Device is not active" });
 

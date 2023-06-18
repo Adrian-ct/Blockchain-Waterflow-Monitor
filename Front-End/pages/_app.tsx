@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Modal from "../components/AddDeviceModal";
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+  
   return (
     <>
       <ToastContainer

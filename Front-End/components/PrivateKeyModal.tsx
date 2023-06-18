@@ -1,6 +1,8 @@
 import { MouseEvent, useState } from "react";
 import showToastMessage from "../utils/showToastMessage";
 import { HiOutlineClipboardDocument } from "react-icons/hi2";
+import { useSetRecoilState } from "recoil";
+import { blockchainKeysAtom } from "../atoms/atom";
 
 type SetActive = React.Dispatch<React.SetStateAction<boolean>>;
 
@@ -17,6 +19,8 @@ const PrivateKeyModal = ({
   publicKey,
   privateKey,
 }: Props) => {
+  const setBlockchainKeys = useSetRecoilState(blockchainKeysAtom);
+
   const copyToClipboard = (e: MouseEvent<SVGElement>, text: string) => {
     navigator.clipboard.writeText(text);
     showToastMessage("Copied to clipboard", "success");
@@ -79,7 +83,14 @@ const PrivateKeyModal = ({
         </div>
         <div className="modal-action mr-auto">
           <button
-            onClick={() => setActive(false)}
+            onClick={() => {
+              setBlockchainKeys({
+                publicKey: "",
+                privateKey: "",
+                show: false,
+              });
+              setActive(false);
+            }}
             className="btn btn-error text-white"
           >
             Close

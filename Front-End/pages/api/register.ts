@@ -5,7 +5,7 @@ import User from "../../model/User";
 import bcrypt from "bcrypt";
 import { web3 } from "../../exports/web3";
 import { log } from "console";
-import { ResponseData } from "../../types/fullstack";
+import { BlockchainKeysWithResponse } from "../../types/fullstack";
 
 export const validateEmail = (email: string): boolean => {
   const regEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
@@ -17,23 +17,22 @@ const validateForm = async (
   email: string,
   password: string
 ) => {
-  if (username.length < 6) {
-    return { error: "Username must have 6 or more characters" };
+  if (username.length < 5) {
+    return "Username must have 5 or more characters";
   }
   if (!validateEmail(email)) {
-    return { error: "Email is invalid" };
+    return "Email is invalid";
   }
 
   await dbConnect();
-
   const emailUser = await User.findOne({ email: email });
 
   if (emailUser) {
-    return { error: "Email already exists" };
+    return "Email already exists";
   }
 
   if (password.length < 5) {
-    return { error: "Password must have 5 or more characters" };
+    return "Password must have 5 or more characters";
   }
 
   return null;
@@ -41,13 +40,15 @@ const validateForm = async (
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<BlockchainKeysWithResponse>
 ) {
   // validate if it is a POST
   if (req.method !== "POST") {
-    return res
-      .status(405)
-      .json({ error: "This API call only accepts POST methods" });
+    return res.status(405).json({
+      publicKey: "",
+      privateKey: "",
+      error: "This API call only accepts POST methods",
+    });
   }
 
   // get and validate body variables
@@ -55,15 +56,44 @@ export default async function handler(
 
   const errorMessage = await validateForm(username, email, password);
   if (errorMessage) {
-    return res.status(400).json(errorMessage as ResponseData);
+    return res.status(400).json({
+      publicKey: "",
+      privateKey: "",
+      error: errorMessage,
+    });
+  }
+
+  let existingUser = await User.findOne({ email: email });
+  if (existingUser) {
+    return res.status(400).json({
+      publicKey: "",
+      privateKey: "",
+      error: "Email already exists",
+    });
+  }
+  existingUser = "";
+  existingUser = await User.findOne({ username: username });
+  if (existingUser) {
+    return res.status(400).json({
+      publicKey: "",
+      privateKey: "",
+      error: "Username already exists",
+    });
   }
 
   //create a new web account for the user
-  // const newAccount = web3.eth.accounts.create();
+  const newAccount = web3.eth.accounts.create();
   const encyptedPrivateKey = web3.eth.accounts.encrypt(
-    "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+    newAccount.privateKey,
     process.env.WEB3_SECRET as string
   );
+
+  log("newAccount", newAccount);
+
+  // const encyptedPrivateKey = web3.eth.accounts.encrypt(
+  //   "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+  //   process.env.WEB3_SECRET as string
+  // );
   // hash password
   const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -73,14 +103,21 @@ export default async function handler(
     email,
     hashedPassword,
     privateKey: JSON.stringify(encyptedPrivateKey),
-    publicKey: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    publicKey: newAccount.address,
   });
 
   try {
     await newUser.save();
-    res.status(200).json({ msg: "Successfuly created new User: " + newUser });
+    res.status(200).json({
+      publicKey: newAccount.address,
+      privateKey: newAccount.privateKey,
+      message: "Successfuly created new User",
+    });
   } catch (err) {
-    log("err", err);
-    res.status(500).json({ error: "Error on '/api/register': " + err });
+    res.status(500).json({
+      privateKey: "",
+      publicKey: "",
+      error: "Error on '/api/register': " + err,
+    });
   }
 }

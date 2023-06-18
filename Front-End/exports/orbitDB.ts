@@ -14,7 +14,7 @@ async function createOrbitDB() {
     await dbLog.load();
     log(dbLog.address.toString() + " was created");
     dbLog.events.on("write", (address: any, entry: any, heads: any) => {
-      console.log(`Databse updated`);
+      console.log(`Database updated`);
     });
     return dbLog;
   } catch (err: any) {

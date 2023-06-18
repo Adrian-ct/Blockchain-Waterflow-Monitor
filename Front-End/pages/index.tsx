@@ -13,7 +13,7 @@ const Home: NextPage = () => {
   if (session) {
     return (
       <div className="flex justify-center items-center ">
-        <div className="grid gap-y-10 mt-10 p-6 justify-center max-w-[80%] glass rounded-xl">
+        <div className="grid gap-y-10 mt-10 p-6 justify-center items-center max-w-[80%] glass rounded-xl">
           <Carousel />
           <div className="grid grid-cols-5 divide-x-2 border-double border-8 rounded-xl">
             <Card

@@ -1,10 +1,15 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { Field, Form, Formik } from "formik";
 import showToastMessage from "../utils/showToastMessage";
+import { useRecoilState } from "recoil";
+import { blockchainKeysAtom } from "../atoms/atom";
+import { BlockchainKeysWithResponse } from "../types/fullstack";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { set } from "mongoose";
 interface IDivicerProps {
   word?: string;
 }
@@ -32,12 +37,21 @@ const Auth: NextPage = ({ providers }: any) => {
     Login: "Register",
     Register: "Login",
   };
+
+  //Inputs
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   //Hide/Show password
   const [showPassword, setShowPassword] = useState(false);
+
+  //Blockchain keys state
+  const [blockchainKeys, setBlockchainKeys] =
+    useRecoilState(blockchainKeysAtom);
+
+  //Loading spinner state
+  const [loading, setLoading] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -51,6 +65,7 @@ const Auth: NextPage = ({ providers }: any) => {
   };
 
   const loginUser = async () => {
+    setLoading(true);
     const res: any = await signIn("credentials", {
       redirect: false,
       email: email,
@@ -58,6 +73,7 @@ const Auth: NextPage = ({ providers }: any) => {
       callbackUrl: `${window.location.origin}`,
     });
     res.error ? showToastMessage(res.error, "error") : redirectToHome();
+    setLoading(false);
   };
 
   const formSubmit = (actions: any) => {
@@ -67,8 +83,9 @@ const Auth: NextPage = ({ providers }: any) => {
   };
 
   const registerUser = async () => {
-    const res = await axios
-      .post(
+    setLoading(true);
+    try {
+      const res: any = await axios.post(
         "/api/register",
         { username, email, password },
         {
@@ -77,15 +94,22 @@ const Auth: NextPage = ({ providers }: any) => {
             "Content-Type": "application/json",
           },
         }
-      )
-      .then(async () => {
-        await loginUser();
-        redirectToHome();
-      })
-      .catch((error) => {
-        showToastMessage(error.message, "error");
+      );
+
+      console.log(res, "res.data");
+      const parsedRes: BlockchainKeysWithResponse = res.data;
+      console.log(parsedRes);
+      setBlockchainKeys({
+        publicKey: parsedRes.publicKey,
+        privateKey: parsedRes.privateKey,
+        show: true,
       });
-    console.log(res);
+      await loginUser();
+      redirectToHome();
+    } catch (error: any) {
+      showToastMessage(error.response?.data?.error, "error");
+    }
+    setLoading(false);
   };
 
   return (
@@ -174,6 +198,7 @@ const Auth: NextPage = ({ providers }: any) => {
               </Form>
             )}
           </Formik>
+          {loading && <LoadingSpinner className="mt-8" />}
         </div>
       </div>
     </div>

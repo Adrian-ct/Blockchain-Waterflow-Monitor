@@ -10,7 +10,7 @@ type Props = {
 
 function getPreviousHourAMPM() {
   const date = new Date();
-  date.setHours(date.getHours() - 1);
+  //date.setHours(date.getHours() - 1);
   const hour = date.getHours();
   const ampm = date.getHours() < 12 ? "AM" : "PM";
   return `${hour} ${ampm}`;
